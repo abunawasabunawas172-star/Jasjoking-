@@ -1,0 +1,266 @@
+{
+  "users": [
+    {
+      "id": "u-buyer-aputrawan",
+      "username": "aputrawan",
+      "email": "aputrawan666@gmail.com",
+      "role": "buyer",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan",
+      "createdAt": "2026-05-21T10:00:00Z"
+    },
+    {
+      "id": "u-admin-abunawas",
+      "username": "abunawas",
+      "email": "abunawasabunawas172@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas",
+      "createdAt": "2026-05-21T10:00:00Z"
+    },
+    {
+      "id": "u-seller-hafiz",
+      "username": "hafiz",
+      "email": "hafizalrasyid8@gmail.com",
+      "role": "seller",
+      "storeName": "Hafiz Creative Agency",
+      "sellerQrisText": "QRIS.HAFIZ",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz",
+      "createdAt": "2026-05-21T10:00:00Z"
+    },
+    {
+      "id": "u-seller-dian",
+      "username": "dian",
+      "email": "dian@gmail.com",
+      "role": "seller",
+      "storeName": "Dian Photography UMSU",
+      "sellerQrisText": "QRIS.DIAN",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=dian",
+      "createdAt": "2026-05-21T10:00:00Z"
+    }
+  ],
+  "passwordStore": {
+    "aputrawan666@gmail.com": "Admin123",
+    "abunawasabunawas172@gmail.com": "Admin123",
+    "hafizalrasyid8@gmail.com": "Admin123",
+    "dian@gmail.com": "Admin123"
+  },
+  "products": [
+    {
+      "id": "p-desain-poster",
+      "sellerId": "u-andi-freelance",
+      "sellerName": "Andi Kreatif (Mhs Ilmu Komunikasi UMSU)",
+      "title": "Jasa Desain Poster, Flyer & Banner Kegiatan Kampus",
+      "description": "Layanan desain grafis profesional untuk poster kegiatan, seminar harian, pamflet organisasi, hingga banner acara IMM/BEM/HMJ UMSU. Desain modern, estetis, revisi tak terbatas, dan pengerjaan kilat 1 hari kawan.",
+      "price": 35000,
+      "category": "desain",
+      "imageUrl": "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=600",
+      "stock": 100,
+      "staffOptions": [
+        "Andi (UI Designer)",
+        "Reza (Illustrator)"
+      ],
+      "address": "Gedung FISIP Lantai 2, Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6282274991122",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-edit-video",
+      "sellerId": "u-budi-multimedia",
+      "sellerName": "Budi Creative Studio (Mhs Teknik UMSU)",
+      "title": "Jasa Edit Video Reels, TikTok & Dokumentasi Kegiatan Kampus",
+      "description": "Jasa edit video sinematik untuk reels Instagram, TikTok viral, rekaman wisuda, profil organisasi, atau tugas mata kuliah. Termasuk color grading, audio mixing, subtitle dinamis, dan efek transisi kekinian.",
+      "price": 75000,
+      "category": "desain",
+      "imageUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600",
+      "stock": 50,
+      "staffOptions": [
+        "Budi (Video Editor)",
+        "Sarah (Motion Designer)"
+      ],
+      "address": "Fakultas Teknik Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+      "whatsappContact: ": "6281260408890",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-jasa-ppt",
+      "sellerId": "u-budi-multimedia",
+      "sellerName": "Budi Creative Studio (Mhs Teknik UMSU)",
+      "title": "Jasa Pembuatan Slide PPT Presentasi Kuliah & Sidang Skripsi Estetik",
+      "description": "Bantu buat slide presentasi PPT/Canva super estetik, minimalis, dan komunikatif untuk tugas harian, proposal PKM, proposal penelitian, hingga Sidang Skripsi UMSU agar terlihat profesional di mata dosen kawan.",
+      "price": 50000,
+      "category": "desain",
+      "imageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600",
+      "stock": 80,
+      "staffOptions": [
+        "Budi (Canva Specialist)",
+        "Rina (Copywriter)"
+      ],
+      "address": "Fakultas Teknik Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6281260408890",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-desain-cv",
+      "sellerId": "u-andi-freelance",
+      "sellerName": "Andi Kreatif (Mhs Ilmu Komunikasi UMSU)",
+      "title": "Jasa Desain CV (Curriculum Vitae) ATS-Friendly & Kreatif",
+      "description": "Pembuatan personal resume / CV profesional dengan format standar ATS (Applicant Tracking System) untuk lamaran magang atau kerja fresh graduate. Pilihan template kreatif, asyik, dan terarah kawan.",
+      "price": 30000,
+      "category": "desain",
+      "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=600",
+      "stock": 120,
+      "staffOptions": [
+        "Andi (CV Expert)"
+      ],
+      "address": "Gedung FISIP Lantai 2, Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6282274991122",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-pengetikan",
+      "sellerId": "u-cindy-typing",
+      "sellerName": "Cindy Typing Center (Mhs Ekonomi UMSU)",
+      "title": "Jasa Pengetikan Kilat & Rapikan Format Skripsi",
+      "description": "Jasa pengetikan transkripsi wawancara, entri data excel, merapikan dokumen tugas kuliah, daftar isi otomatis, penomoran halaman berbeda, serta perbaikan format penulisan skripsi sesuai Buku Panduan UMSU.",
+      "price": 15000,
+      "category": "print",
+      "imageUrl": "https://images.unsplash.com/photo-1516116211223-5c359a36298a?w=600",
+      "stock": 200,
+      "staffOptions": [
+        "Cindy (Spesialis MS Word)",
+        "Gerry (Data Entry)"
+      ],
+      "address": "Gang Rukun (Samping Pascasarjana UMSU), Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6289561011223",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-penulisan-makalah",
+      "sellerId": "u-cindy-typing",
+      "sellerName": "Cindy Typing Center (Mhs Ekonomi UMSU)",
+      "title": "Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas",
+      "description": "Membantu bimbingan atau asistensi perapian draft makalah, resume artikel jurnal, rangkuman bab buku, dan pengetikan laporan tugas akademik secara rinci sesuai EYD/PUEBI kawan.",
+      "price": 40000,
+      "category": "print",
+      "imageUrl": "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600",
+      "stock": 60,
+      "staffOptions": [
+        "Cindy (Academic Assistant)"
+      ],
+      "address": "Gang Rukun (Samping Pascasarjana UMSU), Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6289561011223",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-bimbingan-coding",
+      "sellerId": "u-hafiz-tech",
+      "sellerName": "Hafiz Tech Support (Mhs Ilmu Komputer UMSU)",
+      "title": "Jasa Bimbingan Coding Website & Aplikasi Tugas Kuliah",
+      "description": "Butuh tutor atau bantuan pengerjaan project website (React/Vite/Tailwind, PHP Laravel) atau coding Java/C++ untuk tugas besar ilmu komputer? Sesi bimbingan tatap muka online/offline didampingi penjelasan logic baris-per-baris.",
+      "price": 200000,
+      "category": "coding",
+      "imageUrl": "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=600",
+      "stock": 30,
+      "staffOptions": [
+        "Hafiz (Frontend Dev)",
+        "Dian (Backend Engineer)"
+      ],
+      "address": "Laboratorium Komputer UMSU Lantai 3, Jl. Kapten Mukhtar Basri",
+      "whatsappContact": "6282165432109",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-fotografi",
+      "sellerId": "u-lensa-basri",
+      "sellerName": "Lensa Basri Photography (Mhs FISIP UMSU)",
+      "title": "Jasa Fotografi Kampus (Wisuda, Sidang Meja Hijau & Event)",
+      "description": "Sesi foto outdoor/indoor wisuda mahasiswa UMSU, pendampingan foto sidang meja hijau, foto studio mini kelompok organisasi BEM/PKM, atau liputan dokumentasi kegiatan ormawa. Sudah termasuk 10 file edit premium & seluruh file raw kawan.",
+      "price": 150000,
+      "category": "fotografi",
+      "imageUrl": "https://images.unsplash.com/photo-1502982720700-bfff97f2ecac?w=600",
+      "stock": 15,
+      "staffOptions": [
+        "Rico (Fotografer Utama)",
+        "Fira (Photo Editor)"
+      ],
+      "address": "Jl. Kapten Mukhtar Basri No.12 (Samping Gerbang Utama UMSU)",
+      "whatsappContact": "6281122334455",
+      "sellerType": "mahasiswa"
+    },
+    {
+      "id": "p-mitra-ayampenyet",
+      "sellerId": "u-mitra-ayampenyet",
+      "sellerName": "Ayam Penyet Mbak Sri (Kantin Utama UMSU)",
+      "title": "Ayam Penyet Sambal Korek Gurih + Es Teh Manis Jumbo",
+      "description": "Menu makan siang favorit mahasiswa UMSU! Ayam goreng cripsy renyah dipadukan sambal korek pedas mampus khas Mbak Sri. Sudah termasuk nasi hangat, lalapan segar, kriukan gurih and Es Teh Manis dingin kawan. Siap makan di tempat atau antar kelas.",
+      "price": 18000,
+      "category": "makanan",
+      "imageUrl": "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600",
+      "stock": 150,
+      "tableOptions": [
+        "Meja Kantin B1",
+        "Meja Kantin B2",
+        "Meja Kantin B3",
+        "Bungkus / Delivery Kelas"
+      ],
+      "address": "Stand Kantin Utama UMSU No. 3 (Samping Koperasi Mahasiswa)",
+      "whatsappContact": "6281355443322",
+      "sellerType": "mitra",
+      "sellerRating": 4.9,
+      "sellerReviewCount": 12
+    },
+    {
+      "id": "p-mitra-kopi",
+      "sellerId": "u-mitra-kopi",
+      "sellerName": "Kopi Mahasiswa & Snack Corner UMSU",
+      "title": "Es Kopi Susu Creamy Gula Aren & Risoles Lumbut Spesial (Bundle)",
+      "description": "Booster fokus kuliah untuk begadang nugas! Perpaduan mantap kopi instan arabika, susu krim tebal, dan sirup gula aren pilihan. Ditambah 2 pcs risoles sayur/mayo isi daging ayam suwir hangat gratis.",
+      "price": 15000,
+      "category": "makanan",
+      "imageUrl": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600",
+      "stock": 100,
+      "tableOptions": [
+        "Cangkrukan Kopi Meja 1",
+        "Cangkrukan Kopi Meja 2",
+        "Ambil Sendiri/Takeaway"
+      ],
+      "address": "Paviliun Taman Kampus UMSU, Depan Masjid Jami' UMSU",
+      "whatsappContact": "6285299887766",
+      "sellerType": "mitra",
+      "sellerRating: ": 4.8,
+      "sellerReviewCount": 8
+    },
+    {
+      "id": "p-mitra-fotokopi",
+      "sellerId": "u-mitra-fotokopi",
+      "sellerName": "Pratama Copy Center & ATK Mitra Kampus",
+      "title": "Satu Paket Print Dokumen Tugas / Skripsi HVS 80gr + Jilid Lux",
+      "description": "Layanan cetak tugas, diktat kuliah, handout dsb. Cetak laser hemat berkualitas tinggi, hitam putih maupun warna. Jaminan jilid rapi bersampul mika tebal, pengerjaan di tempat langsung jadi kawan.",
+      "price": 12000,
+      "category": "kebutuhan",
+      "imageUrl": "https://images.unsplash.com/photo-1612815154858-60aa4c59eae6?w=600",
+      "stock": 500,
+      "tableOptions": [
+        "Antrean Cepat A",
+        "Ditinggal Besok",
+        "Kirim via PDF/WA"
+      ],
+      "address": "Gedung Utama UMSU Lantai Dasar (Samping ATM Center)",
+      "whatsappContact": "6281233221100",
+      "sellerType": "mitra",
+      "sellerRating": 4.7,
+      "sellerReviewCount": 15
+    }
+  ],
+  "orders": [],
+  "discordWebhookUrl": "https://discord.com/api/webhooks/1506966245835280497/V7wJxSfRS4_i31Uk7tb78K_8xIjxPZdjYZN0D-caeXnYvQTN-bN4vFhVGLSPa-GiilqB",
+  "discordLogs": [],
+  "globalNotifications": [
+    {
+      "id": "n-welcome",
+      "title": "Selamat datang di JasJoking Mahasiswa!",
+      "body": "Temukan kebutuhan perkuliahanmu, tawarkan jasamu, atau mulailah berbisnis sebagai mahasiswa/UMKM hari ini.",
+      "timestamp": "2026-06-02T12:13:24.593Z",
+      "read": false
+    }
+  ]
+}

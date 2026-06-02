@@ -1,0 +1,6 @@
+{
+  "name": "JasJoking Mahasiswa",
+  "description": "Platform jual beli mahasiswa & UMKM kampus untuk buku, alat kuliah, jasa desain, coding, dan print tugas, dilengkapi sistem QRIS otomatis, reservasi meja, penjadwalan admin, chat, dan notifikasi Discord.",
+  "requestFramePermissions": ["notifications"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

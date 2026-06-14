@@ -31,7 +31,14 @@ interface AnalyticsData {
 }
 
 export function AdminPanel({ user }: AdminPanelProps) {
-  const isAdminUtama = user.email === 'abunawasabunawas172@gmail.com';
+  const allowedAdminEmails = [
+    'rezekisalsabilah06@gmail.com',
+    'dianmarifas@gmail.com',
+    'hafizrasyid23@gmail.com',
+    'alifputrawan23@gmail.com',
+    'marvinsyahid23@gmail.com'
+  ];
+  const isAdminUtama = allowedAdminEmails.includes(user.email?.toLowerCase() || '');
   const [orders, setOrders] = useState<Order[]>([]);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [webhookUrl, setWebhookUrl] = useState('');
@@ -568,7 +575,7 @@ export function AdminPanel({ user }: AdminPanelProps) {
             </div>
             
             <div className="h-64 sm:h-72 w-full pr-2">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={260} minWidth={0}>
                 <AreaChart data={getDailyTrendData()} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
@@ -610,7 +617,7 @@ export function AdminPanel({ user }: AdminPanelProps) {
             </div>
 
             <div className="h-64 sm:h-72 w-full pr-2">
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={260} minWidth={0}>
                 <BarChart data={getCategoryChartData()} margin={{ top: 10, right: 10, left: -22, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                   <XAxis dataKey="label" tickLine={false} axisLine={false} tickStyle={{ fontSize: 8, fontWeight: 600, fill: '#64748b' }} />

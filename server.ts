@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 // --- Server In-Memory Database / JSON File Persistence ---
 let users: User[] = [
   { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
-  { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
+  { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
   { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
   { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
   
@@ -274,7 +274,7 @@ function loadDb() {
         // Ensure the 4 requested admins exist in users
         const adminSeeds: User[] = [
           { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
-          { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
+          { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
           { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
           { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
           { id: "u-admin-rezeki", username: "rezekisalsabilah06", email: "rezekisalsabilah06@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=rezeki", createdAt: "2026-06-14T10:00:00Z" },
@@ -692,8 +692,7 @@ app.post("/api/auth/login", (req, res) => {
     "dianmarifas@gmail.com",
     "hafizrasyid23@gmail.com",
     "alifputrawan23@gmail.com",
-    "marvinsyahid23@gmail.com",
-    "abunawasabunawas172@gmail.com"
+    "marvinsyahid23@gmail.com"
   ];
 
   // Restrict Admin Portal & Admin Role logins to Whitelisted emails only kawan!
@@ -703,27 +702,13 @@ app.post("/api/auth/login", (req, res) => {
     });
   }
 
-  // Special Treatment: abunawasabunawas172@gmail.com gets super admin access to any portal!
-  if (user.email.toLowerCase() === "abunawasabunawas172@gmail.com") {
-    if (portal === 'buyer') {
-      finalUser.role = "buyer";
-    } else if (portal === 'seller') {
-      finalUser.role = "seller";
-      if (!finalUser.storeName) {
-        finalUser.storeName = "Abunawas Admin Vendor";
-      }
-    } else if (portal === 'admin') {
-      finalUser.role = "admin";
-    }
-  } else {
-    // Normal users cannot cross the portal separation lines!
-    if (portal && user.role !== portal) {
-      const userRoleName = user.role === 'buyer' ? 'Mahasiswa' : user.role === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
-      const portalName = portal === 'buyer' ? 'Mahasiswa' : portal === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
-      return res.status(403).json({
-        error: `Akses Portal Ditolak! Akun kawan terdaftar sebagai [${userRoleName}] dan tidak boleh sembarangan login di portal [${portalName}]. Silakan masuk di tempat yang benar kawan!`
-      });
-    }
+  // Normal users cannot cross the portal separation lines!
+  if (portal && user.role !== portal) {
+    const userRoleName = user.role === 'buyer' ? 'Mahasiswa' : user.role === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
+    const portalName = portal === 'buyer' ? 'Mahasiswa' : portal === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
+    return res.status(403).json({
+      error: `Akses Portal Ditolak! Akun kawan terdaftar sebagai [${userRoleName}] dan tidak boleh sembarangan login di portal [${portalName}]. Silakan masuk di tempat yang benar kawan!`
+    });
   }
 
   sendDiscordWebhook("Pengguna Masuk (Login)", `Pengguna ${finalUser.username} (${finalUser.role}) berhasil masuk ke sistem JasJoking Mahasiswa.`, {
@@ -742,7 +727,7 @@ app.post("/api/auth/reset", (req, res) => {
     // Restore seeded users list
     users = [
       { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
-      { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
+      { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
       { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
       { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
       

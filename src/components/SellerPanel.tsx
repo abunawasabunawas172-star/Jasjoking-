@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { User, Product, Order, CategoryType, OrderStatus } from '../types';
 import { FileUp, ShoppingCart, MessageSquare, Send, CheckCircle, RefreshCw, X, Calendar, UserCheck, Armchair } from 'lucide-react';
 import { CATEGORY_LABELS } from './ProductCard';
@@ -49,6 +49,52 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
   const [aiPricingResult, setAiPricingResult] = useState('');
   const [aiDescriptionResult, setAiDescriptionResult] = useState('');
   const [aiError, setAiError] = useState('');
+  const [dragActive, setDragActive] = useState(false);
+
+  const handleImageFile = (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setFormError('File harus berupa gambar (png, jpg, jpeg, dll).');
+      return;
+    }
+    if (file.size > 2.5 * 1024 * 1024) {
+      setFormError('Ukuran gambar terlalu besar kawan! Maksimal 2.5 MB.');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setImageUrl(e.target.result as string);
+        setFormSuccess('Foto berhasil dimuat!');
+        setTimeout(() => setFormSuccess(''), 2500);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleImageFile(e.dataTransfer.files[0]);
+    }
+  };
 
   // Handle Save Merchant Payment Configuration Profile
   const handleSavePaymentConfig = async (e: React.FormEvent) => {
@@ -84,7 +130,7 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
   };
 
   // Fetch received orders
-  const fetchSellerOrders = async () => {
+  const fetchSellerOrders = useCallback(async () => {
     setLoadingOrders(true);
     try {
       const res = await fetch(`/api/orders?userId=${user.id}&role=seller`);
@@ -93,17 +139,23 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
         setOrders(data);
         
         // Update selected order details on the fly
-        if (selectedOrder) {
-          const fresh = data.find((o: Order) => o.id === selectedOrder.id);
-          if (fresh) setSelectedOrder(fresh);
-        }
+        setSelectedOrder(prev => {
+          if (!prev) return null;
+          const fresh = data.find((o: Order) => o.id === prev.id);
+          if (!fresh) return prev;
+          // Compare strings to prevent reference-based infinite loops kawan!
+          if (JSON.stringify(fresh) !== JSON.stringify(prev)) {
+            return fresh;
+          }
+          return prev;
+        });
       }
     } catch (e) {
       console.error(e);
     } finally {
       setLoadingOrders(false);
     }
-  };
+  }, [user.id]);
 
   // AI Assistant integration handler methods
   const getAiPricingRecommendation = async () => {
@@ -166,7 +218,7 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
     fetchSellerOrders();
     const interval = setInterval(fetchSellerOrders, 4000);
     return () => clearInterval(interval);
-  }, [selectedOrder]);
+  }, [fetchSellerOrders]);
 
   // Handle Product upload submission
   const handleCreateProduct = async (e: React.FormEvent) => {
@@ -174,9 +226,70 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
     setFormError('');
     setFormSuccess('');
 
-    if (!title || !price || !stock) {
-      setFormError('Lengkapi judul, harga, dan jumlah stok.');
+    // 1. Title Trim Length Check
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle || trimmedTitle.length < 3) {
+      setFormError('Judul jualan minimal harus terdiri dari 3 karakter kawan.');
       return;
+    }
+
+    // 2. Price Validation
+    const numericPrice = Number(price);
+    if (!price || isNaN(numericPrice) || numericPrice <= 0) {
+      setFormError('Harga harus berupa angka positif di atas 0 rupiah.');
+      return;
+    }
+
+    // 3. Stock Validation
+    const numericStock = Number(stock);
+    if (!stock || isNaN(numericStock) || numericStock < 1) {
+      setFormError('Jumlah stok minimal harus berjumlah 1 kawan.');
+      return;
+    }
+
+    // 4. Category Alignment & Non-Overlapping Verification
+    const isStudentCat = ['desain', 'coding', 'print', 'fotografi'].includes(category);
+    const isPartnerCat = ['makanan', 'kebutuhan'].includes(category);
+    
+    if (sellerType === 'mahasiswa' && !isStudentCat) {
+      setFormError('Kategori tidak cocok! Pilih Desain, Coding, Print, atau Fotografi untuk jasa mahasiswa.');
+      return;
+    }
+    if (sellerType === 'mitra' && !isPartnerCat) {
+      setFormError('Kategori tidak cocok! Pilih Makanan atau Kebutuhan untuk Mitra / Tempat.');
+      return;
+    }
+
+    // 5. Physical Address Validation (Specific to Mitra)
+    if (sellerType === 'mitra' && !customAddress.trim()) {
+      setFormError('Atas nama Mitra Kampus, Anda wajib mengisi Alamat Fisik Kedai kawan!');
+      return;
+    }
+
+    // 6. WhatsApp Valid Number format check
+    const cleanWhatsapp = customWhatsapp.trim().replace(/[^0-9]/g, '');
+    if (!cleanWhatsapp || cleanWhatsapp.length < 9 || cleanWhatsapp.length > 15) {
+      setFormError('Format No. WhatsApp salah! Silakan isi nomor handphone yang valid (9-15 digit angka saja).');
+      return;
+    }
+
+    // 7. Image placeholder trigger injection or validity check
+    let finalImageUrl = imageUrl.trim();
+    if (!finalImageUrl) {
+      const defaultImages: Record<CategoryType, string> = {
+        desain: 'https://images.unsplash.com/photo-1541462608141-27b297b15575?w=600',
+        coding: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600',
+        print: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600',
+        fotografi: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600',
+        makanan: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600',
+        kebutuhan: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=600'
+      };
+      finalImageUrl = defaultImages[category] || '';
+    } else {
+      if (!finalImageUrl.startsWith('http://') && !finalImageUrl.startsWith('https://') && !finalImageUrl.startsWith('data:image/')) {
+        setFormError('Tautan/Link Gambar tidak sah. Gunakan file unggahan atau link HTTP/HTTPS valid.');
+        return;
+      }
     }
 
     try {
@@ -185,16 +298,16 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           sellerId: user.id,
-          title,
-          description,
-          price: Number(price),
+          title: trimmedTitle,
+          description: description.trim(),
+          price: Math.floor(numericPrice),
           category,
-          imageUrl,
-          stock: Number(stock),
+          imageUrl: finalImageUrl,
+          stock: Math.floor(numericStock),
           staffOptions,
           tableOptions,
-          address: customAddress,
-          whatsappContact: customWhatsapp,
+          address: sellerType === 'mitra' ? customAddress.trim() : undefined,
+          whatsappContact: cleanWhatsapp,
           sellerType
         })
       });
@@ -208,12 +321,11 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
       setTitle('');
       setDescription('');
       setPrice('');
-      setCategory('desain');
+      setCategory(sellerType === 'mitra' ? 'makanan' : 'desain');
       setImageUrl('');
       setStock('10');
       setStaffOptions('');
       setTableOptions('');
-      setSellerType('mahasiswa');
 
       setTimeout(() => {
         setFormSuccess('');
@@ -284,7 +396,30 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
+    <div className="space-y-6">
+      {/* 🏪 SELLER PANEL HEADER BANNER */}
+      <div className="bg-gradient-to-r from-slate-850 via-slate-900 to-indigo-950 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden text-left">
+        <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none text-[155px] select-none font-black lg:block hidden">🏪</div>
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <span className="text-[10px] bg-white/20 font-mono tracking-widest text-indigo-200 uppercase px-2.5 py-0.5 rounded-full font-black">
+              🏪 DASHBOARD PENJUAL KAMPUS UMSU
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black mt-1.5">
+              Halo kawan, Mitra @{user.username}! 📈
+            </h1>
+            <p className="text-xs text-indigo-100 font-sans mt-0.5 leading-relaxed">
+              Pantau pesanan, tawarkan produk katering/makanan, jasa cetak makalah, cv, desain kustom, dan tarik dana ke rekeningmu kawan!
+            </p>
+          </div>
+          <div className="bg-indigo-900/40 p-3 px-4 rounded-2xl border border-indigo-500/20 text-center shrink-0">
+            <span className="block text-[9px] text-indigo-350 font-bold uppercase">Pesanan Masuk</span>
+            <div className="text-lg font-black">{orders.length} Orderan</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
       
       {/* 4 columns: Adding and Editing products */}
       <div className="lg:col-span-5 space-y-6">
@@ -304,6 +439,44 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
 
           <form onSubmit={handleCreateProduct} className="space-y-3.5 text-xs">
             
+            {/* TIPE UPLOAD / MERCHANT SEPARATOR */}
+            <div className="bg-slate-50 p-1 rounded-xl border border-slate-200 grid grid-cols-2 gap-1 text-center select-none mb-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setSellerType('mahasiswa');
+                  if (category === 'makanan' || category === 'kebutuhan') {
+                    setCategory('desain');
+                    populatePlaceholderImage('desain');
+                  }
+                }}
+                className={`py-2 px-1.5 rounded-lg text-[10.5px] font-bold flex items-center justify-center gap-1 transition cursor-pointer ${
+                  sellerType === 'mahasiswa'
+                    ? 'bg-emerald-600 text-white shadow-xs font-extrabold'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100/50'
+                }`}
+              >
+                <span>🎓</span> JASA MAHASISWA
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setSellerType('mitra');
+                  if (category !== 'makanan' && category !== 'kebutuhan') {
+                    setCategory('makanan');
+                    populatePlaceholderImage('makanan');
+                  }
+                }}
+                className={`py-2 px-1.5 rounded-lg text-[10.5px] font-bold flex items-center justify-center gap-1 transition cursor-pointer ${
+                  sellerType === 'mitra'
+                    ? 'bg-amber-600 text-white shadow-xs font-extrabold'
+                    : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100/50'
+                }`}
+              >
+                <span>🏪</span> MITRA / TEMPAT
+              </button>
+            </div>
+
             {/* Title */}
             <div>
               <label className="block text-slate-500 font-medium tracking-wide mb-1">Judul Jualan / Layanan</label>
@@ -438,50 +611,7 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
               </div>
             </div>
 
-            {/* Tipe Merchant */}
-            <div>
-              <label className="block text-slate-500 font-semibold mb-1.5 uppercase tracking-wider text-[10px]">Tipe Merchant / Penyedia</label>
-              <div className="grid grid-cols-2 gap-2 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSellerType('mahasiswa');
-                    // Automatically switch to standard category if current is partner-only
-                    if (category === 'makanan' || category === 'kebutuhan') {
-                      setCategory('desain');
-                      populatePlaceholderImage('desain');
-                    }
-                  }}
-                  className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition ${
-                    sellerType === 'mahasiswa'
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-400 font-black shadow-sm'
-                      : 'bg-white text-slate-650 border-slate-200 hover:bg-slate-50/50'
-                  }`}
-                >
-                  <span>🎓</span> Mahasiswa
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSellerType('mitra');
-                    // Automatically switch to partner category if current is student-only
-                    if (category !== 'makanan' && category !== 'kebutuhan') {
-                      setCategory('makanan');
-                      populatePlaceholderImage('makanan');
-                    }
-                  }}
-                  className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition ${
-                    sellerType === 'mitra'
-                      ? 'bg-amber-50 text-amber-800 border-amber-400 font-black shadow-sm'
-                      : 'bg-white text-slate-650 border-slate-200 hover:bg-slate-50/50'
-                  }`}
-                >
-                  <span>🏪</span> Mitra Kampus (Kantin)
-                </button>
-              </div>
-            </div>
-
-            {/* Category selection */}
+            {/* Category selection filtered by Tipe Upload */}
             <div>
               <label className="block text-slate-500 font-medium mb-1">Kategori Layanan</label>
               <select
@@ -490,42 +620,92 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
                   const catVal = e.target.value as CategoryType;
                   setCategory(catVal);
                   populatePlaceholderImage(catVal);
-                  // Contextually sync merchant types
+                  // Sync merchant types contextual selection
                   if (catVal === 'makanan' || catVal === 'kebutuhan') {
                     setSellerType('mitra');
                   } else {
                     setSellerType('mahasiswa');
                   }
                 }}
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 font-semibold text-slate-800"
               >
-                {Object.keys(CATEGORY_LABELS).map((key) => (
-                  <option key={key} value={key}>
-                    {CATEGORY_LABELS[key as CategoryType].label}
-                  </option>
-                ))}
+                {Object.keys(CATEGORY_LABELS)
+                  .filter((key) => {
+                    if (sellerType === 'mahasiswa') {
+                      return ['desain', 'coding', 'print', 'fotografi'].includes(key);
+                    } else {
+                      return ['makanan', 'kebutuhan'].includes(key);
+                    }
+                  })
+                  .map((key) => (
+                    <option key={key} value={key}>
+                      {CATEGORY_LABELS[key as CategoryType].label}
+                    </option>
+                  ))}
               </select>
             </div>
 
-            {/* Image URL with auto-placeholder option */}
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-slate-500 font-medium">Link Gambar Produk</label>
-                <button
-                  type="button"
-                  onClick={() => populatePlaceholderImage(category)}
-                  className="text-[10px] text-emerald-600 font-bold hover:underline cursor-pointer"
-                >
-                  Pakai Gambar Bawaan
-                </button>
+            {/* Foto / Gambar Jasa */}
+            <div className="space-y-2">
+              <label className="block text-slate-500 font-semibold uppercase tracking-wider text-[10px]">Foto / Gambar Jasa</label>
+              
+              {/* Drag n drop box */}
+              <div 
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={handleDrop}
+                onClick={() => document.getElementById('product-image-file')?.click()}
+                className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition relative ${
+                  dragActive ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 hover:border-emerald-555 bg-slate-50'
+                }`}
+              >
+                <input 
+                  type="file" 
+                  id="product-image-file" 
+                  accept="image/*" 
+                  onChange={handleFileChange} 
+                  className="hidden" 
+                />
+                
+                {imageUrl ? (
+                  <div className="space-y-2 flex flex-col items-center">
+                    <img 
+                      src={imageUrl} 
+                      alt="Preview Jasa" 
+                      className="h-20 w-32 object-cover rounded-md border border-slate-200" 
+                    />
+                    <p className="text-[10px] text-slate-400 font-semibold hover:text-emerald-600">Ketuk atau letakkan gambar lain untuk ganti foto kawan</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1 py-1">
+                    <div className="text-xl">📸</div>
+                    <p className="text-xs font-bold text-slate-705 text-slate-700">Tarik gambar ke sini, atau klik untuk memilih file</p>
+                    <p className="text-[10px] text-slate-400">Mendukung format PNG, JPG, JPEG (Maks. 2.5MB)</p>
+                  </div>
+                )}
               </div>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500"
-              />
+
+              {/* Manual URL bypass if they wish */}
+              <div className="pt-1 select-none">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-semibold text-slate-400">Atau gunakan URL/Link Gambar:</span>
+                  <button
+                    type="button"
+                    onClick={() => populatePlaceholderImage(category)}
+                    className="text-[10px] text-emerald-600 font-bold hover:underline cursor-pointer"
+                  >
+                    Pakai Gambar Bawaan
+                  </button>
+                </div>
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:border-emerald-500 text-xs"
+                />
+              </div>
             </div>
 
             {/* ADVANCED CREATIVE SPECIALISTS LIST */}
@@ -543,18 +723,35 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
               </div>
             )}
 
-            {/* PHYSICAL SHOP LOCATION COORDINATES & WHATSAPP OVERRIDE */}
-            <div className="p-3 bg-rose-50 rounded-lg border border-rose-100 space-y-2">
-              <span className="block text-[11px] font-black text-rose-800 uppercase tracking-wide">📍 Alamat Fisik Toko Sekitar UMSU</span>
-              <input
-                type="text"
-                value={customAddress}
-                onChange={(e) => setCustomAddress(e.target.value)}
-                placeholder="cth: Gg. Rukun No.5, Jl. Kapten Mukhtar Basri"
-                className="w-full p-2 bg-white border border-slate-200 rounded focus:outline-none text-xs"
-              />
-              <p className="text-[9px] text-slate-400">Membantu mahasiswa menemukan lokasi fisik jualan Anda.</p>
-            </div>
+            {/* PHYSICAL SHOP LOCATION (Only for Spot/Booth/Mitra Canteens) */}
+            {sellerType === 'mitra' && (
+              <div className="p-3 bg-rose-50/70 rounded-lg border border-rose-100 space-y-2">
+                <span className="block text-[11px] font-black text-rose-800 uppercase tracking-wide">📍 Alamat Fisik Toko Sekitar UMSU</span>
+                <input
+                  type="text"
+                  value={customAddress}
+                  onChange={(e) => setCustomAddress(e.target.value)}
+                  placeholder="cth: Gg. Rukun No.5, Jl. Kapten Mukhtar Basri"
+                  className="w-full p-2 bg-white border border-slate-200 rounded focus:outline-none text-xs"
+                />
+                <p className="text-[9px] text-rose-600/80 font-semibold text-rose-700">Membantu mahasiswa menemukan lokasi fisik jualan kantin/gerobak Anda.</p>
+              </div>
+            )}
+
+            {/* PHYSICAL BOOTH SEATING / TABLE CONFIG (Only for Spot/Booth/Mitra Canteens) */}
+            {sellerType === 'mitra' && (
+              <div className="p-3 bg-amber-50/60 rounded-lg border border-amber-100/70 space-y-2">
+                <span className="block text-[11px] font-black text-amber-800 uppercase tracking-wide">🪑 Daftar Opsi No. Meja / Kursi Kantin (Opsional)</span>
+                <input
+                  type="text"
+                  value={tableOptions}
+                  onChange={(e) => setTableOptions(e.target.value)}
+                  placeholder="cth: Meja 1, Meja 2, Pojokan Lesehan, Meja VIP"
+                  className="w-full p-2 bg-white border border-slate-100 rounded focus:outline-none text-xs text-slate-800 font-bold"
+                />
+                <p className="text-[9px] text-slate-400 font-medium">Pisahkan nama meja dengan tanda koma kawan. Berguna agar pembeli bisa booking meja saat pembayaran.</p>
+              </div>
+            )}
 
             <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-100 space-y-2">
               <span className="block text-[11px] font-black text-emerald-800 uppercase tracking-wide">🟢 No. WhatsApp Aktif (Speed Link WA)</span>
@@ -565,6 +762,20 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
                 placeholder="cth: 62812345678"
                 className="w-full p-2 bg-white border border-slate-200 rounded focus:outline-none text-xs font-mono font-bold"
               />
+              {customWhatsapp.startsWith('0') && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    let cleaned = customWhatsapp.replace(/\D/g, '');
+                    if (cleaned.startsWith('0')) {
+                      setCustomWhatsapp('62' + cleaned.substring(1));
+                    }
+                  }}
+                  className="text-[9px] text-amber-600 font-bold hover:underline block text-left cursor-pointer"
+                >
+                  💡 Nomor diawali 0, klik untuk ubah otomatis ke format &quot;628...&quot;
+                </button>
+              )}
               <p className="text-[9px] text-slate-400">Gunakan format internasional diawali 62 tanpa spasi.</p>
             </div>
 
@@ -749,6 +960,46 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
                 </div>
               </div>
 
+              {/* BUYER INSTRUCTION SPECIFICATION AREA */}
+              {selectedOrder.customNotes && (
+                <div className="p-4 bg-amber-50/70 border-b border-amber-250/20 text-left space-y-1">
+                  <span className="block text-[9px] font-black text-yellow-800 uppercase tracking-widest">📝 INSTRUKSI KHUSUS PEMBELI</span>
+                  <p className="text-xs text-slate-850 italic font-semibold leading-relaxed">
+                    "{selectedOrder.customNotes}"
+                  </p>
+                </div>
+              )}
+
+              {/* SELLER: INSTRUCTION FOR TITLE SELECTION */}
+              {selectedOrder.titleSelectionMethod && (
+                <div className="p-4 bg-indigo-50/50 border-b border-indigo-200/20 text-left space-y-1.5">
+                  <span className="block text-[9px] font-black text-indigo-800 uppercase tracking-widest">💡 KEBUTUHAN JUDUL & TOPIK</span>
+                  <div className="text-xs text-slate-800">
+                    {selectedOrder.titleSelectionMethod === 'self' ? (
+                      <div>
+                        <span>Metode: </span>
+                        <span className="bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                          Pembeli Memilih Sendiri
+                        </span>
+                        <div className="mt-1.5 p-2 bg-white dark:bg-slate-800 rounded border border-indigo-100 dark:border-indigo-950 font-mono text-[11px] text-slate-705 dark:text-slate-300">
+                          <strong>Judul Pilihan Pembeli:</strong> <span className="italic">"{selectedOrder.userSuggestedTitle || '-'}"</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <span>Metode: </span>
+                        <span className="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                          Anda Yang Mencari Judul (Dicarikan Pembuat)
+                        </span>
+                        <p className="mt-1 text-[10px] text-slate-500 leading-snug">
+                          ✨ <i>Tugas Anda: Silakan lakukan riset judul & topik yang paling kreatif & orisinal untuk pembeli kawan, lalu diskusikan lewat obrolan chat di samping!</i>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Order management actions depending on status */}
               <div className="p-4 bg-slate-50 border-b border-slate-200 text-xs space-y-4">
                 
@@ -886,5 +1137,6 @@ export function SellerPanel({ user, refreshProducts, onUserUpdate }: SellerPanel
       </div>
 
     </div>
+   </div>
   );
 }

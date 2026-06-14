@@ -35,13 +35,70 @@
       "sellerQrisText": "QRIS.DIAN",
       "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=dian",
       "createdAt": "2026-05-21T10:00:00Z"
+    },
+    {
+      "id": "u-admin-rezeki",
+      "username": "rezekisalsabilah06",
+      "email": "rezekisalsabilah06@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=rezeki",
+      "createdAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": "u-admin-dianmarifas",
+      "username": "dianmarifas",
+      "email": "dianmarifas@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=dianmarifas",
+      "createdAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": "u-admin-hafizrasyid",
+      "username": "hafizrasyid23",
+      "email": "hafizrasyid23@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=hafizrasyid",
+      "createdAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": "u-admin-alifputrawan",
+      "username": "alifputrawan23",
+      "email": "alifputrawan23@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=alifputrawan",
+      "createdAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": "u-admin-marvinsyahid",
+      "username": "marvinsyahid23",
+      "email": "marvinsyahid23@gmail.com",
+      "role": "admin",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=marvinsyahid",
+      "createdAt": "2026-06-14T10:00:00Z"
+    },
+    {
+      "id": "u-budi-multimedia",
+      "username": "budicreativestudiomhsteknikumsu",
+      "email": "budi-multimedia@gmail.com",
+      "role": "seller",
+      "storeName": "Budi Creative Studio (Mhs Teknik UMSU)",
+      "avatarUrl": "https://api.dicebear.com/7.x/bottts/svg?seed=u-budi-multimedia",
+      "createdAt": "2026-05-21T10:00:00Z",
+      "address": "Fakultas Teknik Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+      "whatsappNumber": "6281122334455",
+      "whatsappVerified": true
     }
   ],
   "passwordStore": {
     "aputrawan666@gmail.com": "Admin123",
     "abunawasabunawas172@gmail.com": "Admin123",
     "hafizalrasyid8@gmail.com": "Admin123",
-    "dian@gmail.com": "Admin123"
+    "dian@gmail.com": "Admin123",
+    "rezekisalsabilah06@gmail.com": "1457557440",
+    "dianmarifas@gmail.com": "dian123",
+    "hafizrasyid23@gmail.com": "hafizrasyid123",
+    "alifputrawan23@gmail.com": "alif123",
+    "marvinsyahid23@gmail.com": "marvin123"
   },
   "products": [
     {
@@ -123,7 +180,7 @@
       "description": "Jasa pengetikan transkripsi wawancara, entri data excel, merapikan dokumen tugas kuliah, daftar isi otomatis, penomoran halaman berbeda, serta perbaikan format penulisan skripsi sesuai Buku Panduan UMSU.",
       "price": 15000,
       "category": "print",
-      "imageUrl": "https://images.unsplash.com/photo-1516116211223-5c359a36298a?w=600",
+      "imageUrl": "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600",
       "stock": 200,
       "staffOptions": [
         "Cindy (Spesialis MS Word)",
@@ -251,16 +308,95 @@
       "sellerReviewCount": 15
     }
   ],
-  "orders": [],
+  "orders": [
+    {
+      "id": "o-1781434763277",
+      "buyerId": "u-admin-abunawas",
+      "buyerName": "abunawas",
+      "sellerId": "u-cindy-typing",
+      "sellerName": "Cindy Typing Center (Mhs Ekonomi UMSU)",
+      "productId": "p-penulisan-makalah",
+      "productTitle": "Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas",
+      "price": 40000,
+      "category": "print",
+      "quantity": 1,
+      "status": "paid",
+      "qrisUrl": "00020101021126570011ID.CO.QRIS.WWW011893600521000123456702030015204481153033605802ID5912CindyTypingCent6007Yogyakarta61055512162070703A016304CA23#AMT=040000#MERCHANT=QRIS.MID-U-CINDY-TYPING",
+      "createdAt": "2026-06-14T10:59:23.277Z",
+      "selectedStaff": "Cindy (Academic Assistant)",
+      "scheduledTime": "Kamis, 09:00 - 11:00",
+      "sellerAddress": "Gang Rukun (Samping Pascasarjana UMSU), Jl. Kapten Mukhtar Basri",
+      "sellerWhatsapp": "6289561011223",
+      "sellerBankName": "Bank Mandiri",
+      "sellerBankAccount": "106-00-14220-432",
+      "sellerQrisCode": "QRIS.MID-U-CINDY-TYPING",
+      "payoutToSeller": 38000,
+      "payoutToPlatform": 2000,
+      "paymentSchema": "full",
+      "repaymentStatus": "none",
+      "chatHistory": [
+        {
+          "senderId": "system",
+          "senderName": "JasJoking Splitter AI",
+          "senderRole": "system",
+          "content": "Pesanan dibuat.\n\n📊 REKAPITULASI PEMBAGIAN DANA (AI Split):\n- Hak Penjual (95%): Rp 38.000\n- Kas Pengembangan Aplikasi (5%): Rp 2.000\n\nSistem AI kami akan mencocokkan pembayaran ini secara real-time! \n\n📝 INSTRUKSI KHUSUS ANDA:\n\"Tidak ada instruksi khusus.\"",
+          "timestamp": "2026-06-14T10:59:23.305Z"
+        },
+        {
+          "senderId": "system",
+          "senderName": "Sistem QRIS",
+          "senderRole": "system",
+          "content": "✅ Pembayaran QRIS Otomatis Terverifikasi! Status berubah menjadi LUNAS (Paid). Menunggu Konfirmasi Penjual.",
+          "timestamp": "2026-06-14T10:59:35.023Z"
+        }
+      ]
+    }
+  ],
   "discordWebhookUrl": "https://discord.com/api/webhooks/1506966245835280497/V7wJxSfRS4_i31Uk7tb78K_8xIjxPZdjYZN0D-caeXnYvQTN-bN4vFhVGLSPa-GiilqB",
-  "discordLogs": [],
+  "discordLogs": [
+    {
+      "id": "dlog-1781434775032",
+      "timestamp": "2026-06-14T10:59:35.032Z",
+      "event": "Pembayaran Berhasil (QRIS)",
+      "message": "Transaksi QRIS otomatis dinyatakan sukses oleh bank mitra kampus. Payload: {\"id_pesanan\":\"o-1781434763277\",\"produk\":\"Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas\",\"pembeli\":\"abunawas\",\"status_baruStr\":\"PAID / LUNAS PEMBAYARAN PENUH\",\"waktu\":\"10.59.35\"}",
+      "webhookUrl": "https://discord.com/api/webhooks/1506966245835280497/V7wJxSfRS4_i31Uk7tb78K_8xIjxPZdjYZN0D-caeXnYvQTN-bN4vFhVGLSPa-GiilqB"
+    },
+    {
+      "id": "dlog-1781434763306",
+      "timestamp": "2026-06-14T10:59:23.306Z",
+      "event": "Pemesanan Baru",
+      "message": "Pesanan baru dalam status menunggu pembayaran. Skema: Lunas. Payload: {\"id_pesanan\":\"o-1781434763277\",\"produk\":\"Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas\",\"pembeli\":\"abunawas\",\"total_bayar\":\"Rp 40.000\",\"harga_asli\":\"Tanpa Diskon\",\"diskon\":\"0\",\"staf_pilihan\":\"Cindy (Academic Assistant)\",\"meja_kursi\":\"Tidak Ada/None\",\"instruksi_khusus\":\"Tidak ada\"}",
+      "webhookUrl": "https://discord.com/api/webhooks/1506966245835280497/V7wJxSfRS4_i31Uk7tb78K_8xIjxPZdjYZN0D-caeXnYvQTN-bN4vFhVGLSPa-GiilqB"
+    },
+    {
+      "id": "dlog-1781434626549",
+      "timestamp": "2026-06-14T10:57:06.549Z",
+      "event": "Pengguna Masuk (Login)",
+      "message": "Pengguna abunawas (buyer) berhasil masuk ke sistem JasJoking Mahasiswa.. Payload: {\"nama_pengguna\":\"abunawas\",\"email\":\"abunawasabunawas172@gmail.com\",\"peran_role\":\"buyer\",\"waktu_login\":\"2026-06-14T10:57:06.549Z\"}",
+      "webhookUrl": "https://discord.com/api/webhooks/1506966245835280497/V7wJxSfRS4_i31Uk7tb78K_8xIjxPZdjYZN0D-caeXnYvQTN-bN4vFhVGLSPa-GiilqB"
+    }
+  ],
   "globalNotifications": [
+    {
+      "id": "n-1781434775024",
+      "title": "Pembayaran QRIS Diterima",
+      "body": "Pembayaran QRIS Lunas penuh sebesar Rp 40.000 otomatis terverifikasi untuk pesanan o-1781434763277",
+      "timestamp": "2026-06-14T10:59:35.024Z",
+      "read": true
+    },
+    {
+      "id": "n-1781434763306",
+      "title": "Pesanan Baru Dibuat",
+      "body": "abunawas melakukan pemesanan Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas",
+      "timestamp": "2026-06-14T10:59:23.306Z",
+      "read": true
+    },
     {
       "id": "n-welcome",
       "title": "Selamat datang di JasJoking Mahasiswa!",
       "body": "Temukan kebutuhan perkuliahanmu, tawarkan jasamu, atau mulailah berbisnis sebagai mahasiswa/UMKM hari ini.",
       "timestamp": "2026-06-02T12:13:24.593Z",
-      "read": false
+      "read": true
     }
   ]
 }

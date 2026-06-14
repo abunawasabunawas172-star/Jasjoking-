@@ -10,6 +10,7 @@ interface NavbarProps {
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
   onOpenSettings: () => void;
+  onGoToLanding?: () => void;
 }
 
 export function Navbar({
@@ -20,6 +21,7 @@ export function Navbar({
   theme,
   onToggleTheme,
   onOpenSettings,
+  onGoToLanding,
 }: NavbarProps) {
   const [showNotifDrawer, setShowNotifDrawer] = useState(false);
   const unreadCount = notifications.filter(n => !n.read).length;
@@ -52,7 +54,11 @@ export function Navbar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
+          <div 
+            onClick={onGoToLanding}
+            className="flex items-center gap-2.5 cursor-pointer hover:opacity-90 active:scale-98 transition text-left" 
+            title="Kembali ke Halaman Beranda Utama kawan"
+          >
             <div className="p-2 bg-emerald-600 dark:bg-emerald-700 rounded-xl text-white">
               <ShoppingBag className="h-5.5 w-5.5" />
             </div>
@@ -61,7 +67,7 @@ export function Navbar({
                 JasJoking Mahasiswa
               </span>
               <span className="block text-[9px] text-slate-400 dark:text-slate-500 font-semibold tracking-wider uppercase">
-                Jasa & Marketplace Kampus
+                Jasa &amp; Marketplace Kampus kawan
               </span>
             </div>
           </div>
@@ -69,16 +75,20 @@ export function Navbar({
           {/* User profile, theme, settings & notifications */}
           <div className="flex items-center gap-2 sm:gap-3.5">
             {/* User credentials */}
-            <div className="hidden sm:flex flex-col items-end text-sm text-right">
+            <div 
+              onClick={onOpenSettings}
+              className="flex items-center gap-2 sm:flex-col sm:items-end text-sm text-right cursor-pointer hover:opacity-85 active:scale-98 transition select-none"
+              title="Buka Profil Saya kawan"
+            >
               <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
                 <img
                   src={user.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
                   alt={user.username}
-                  className="w-5 h-5 rounded-full ring-1 ring-emerald-500/30"
+                  className="w-7 h-7 sm:w-5 sm:h-5 rounded-full ring-2 ring-emerald-500/50"
                 />
-                <span>@{user.username}</span>
+                <span className="hidden xs:inline">@{user.username}</span>
               </div>
-              <div className="mt-0.5 flex gap-1 items-center">
+              <div className="hidden sm:flex gap-1 items-center mt-0.5">
                 {user.storeName && (
                   <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 max-w-[130px] truncate leading-none">
                     {user.storeName}
@@ -87,6 +97,16 @@ export function Navbar({
                 {getRoleBadge(user.role)}
               </div>
             </div>
+
+            {/* Public Landing Link Button kawan */}
+            <button
+              type="button"
+              onClick={onGoToLanding}
+              className="hidden md:flex px-3 py-2 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-755 text-slate-600 hover:text-emerald-650 dark:text-slate-300 dark:hover:text-emerald-400 rounded-xl border border-slate-150 dark:border-slate-800 text-xs font-black transition items-center gap-1.5 cursor-pointer shadow-xs select-none active:scale-98"
+              title="Lihat Halaman Utama Beranda Projek kawan"
+            >
+              <span>📖 Halaman Utama (Beranda)</span>
+            </button>
 
             {/* Toggle Theme Button */}
             <button

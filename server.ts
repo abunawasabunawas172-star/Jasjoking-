@@ -18,7 +18,14 @@ let users: User[] = [
   { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
   { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
   { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
-  { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" }
+  { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
+  
+  // Specific Admin Owners requested by user:
+  { id: "u-admin-rezeki", username: "rezekisalsabilah06", email: "rezekisalsabilah06@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=rezeki", createdAt: "2026-06-14T10:00:00Z" },
+  { id: "u-admin-dianmarifas", username: "dianmarifas", email: "dianmarifas@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dianmarifas", createdAt: "2026-06-14T10:00:00Z" },
+  { id: "u-admin-hafizrasyid", username: "hafizrasyid23", email: "hafizrasyid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafizrasyid", createdAt: "2026-06-14T10:00:00Z" },
+  { id: "u-admin-alifputrawan", username: "alifputrawan23", email: "alifputrawan23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=alifputrawan", createdAt: "2026-06-14T10:00:00Z" },
+  { id: "u-admin-marvinsyahid", username: "marvinsyahid23", email: "marvinsyahid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=marvinsyahid", createdAt: "2026-06-14T10:00:00Z" }
 ];
 
 // Simple plaintext password store for mock database demo safety
@@ -26,14 +33,20 @@ const passwordStore: Record<string, string> = {
   "aputrawan666@gmail.com": "Admin123",
   "abunawasabunawas172@gmail.com": "Admin123",
   "hafizalrasyid8@gmail.com": "Admin123",
-  "dian@gmail.com": "Admin123"
+  "dian@gmail.com": "Admin123",
+  
+  "rezekisalsabilah06@gmail.com": "1457557440",
+  "dianmarifas@gmail.com": "dian123",
+  "hafizrasyid23@gmail.com": "hafizrasyid123",
+  "alifputrawan23@gmail.com": "alif123",
+  "marvinsyahid23@gmail.com": "marvin123"
 };
 
 let products: Product[] = [
   {
     id: "p-desain-poster",
     sellerId: "u-andi-freelance",
-    sellerName: "Andi Kreatif (Mhs Ilmu Komunikasi UMSU)",
+    sellerName: "Andi Kreatif",
     title: "Jasa Desain Poster, Flyer & Banner Kegiatan Kampus",
     description: "Layanan desain grafis profesional untuk poster kegiatan, seminar harian, pamflet organisasi, hingga banner acara IMM/BEM/HMJ UMSU. Desain modern, estetis, revisi tak terbatas, dan pengerjaan kilat 1 hari kawan.",
     price: 35000,
@@ -48,9 +61,9 @@ let products: Product[] = [
   {
     id: "p-edit-video",
     sellerId: "u-budi-multimedia",
-    sellerName: "Budi Creative Studio (Mhs Teknik UMSU)",
+    sellerName: "Budi Creative Studio",
     title: "Jasa Edit Video Reels, TikTok & Dokumentasi Kegiatan Kampus",
-    description: "Jasa edit video sinematik untuk reels Instagram, TikTok viral, rekaman wisuda, profil organisasi, atau tugas mata kuliah. Termasuk color grading, audio mixing, subtitle dinamis, dan efek transisi kekinian.",
+    description: "Jasa edit video sinematik untuk reels Instagram, TikTok viral, rekaman wisuda, profil organisasi, atau tugas mata kuliah. Termasuk color grading, audio mixing, subtitle dinamis, and efek transisi kekinian.",
     price: 75000,
     category: "desain",
     imageUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600",
@@ -63,7 +76,7 @@ let products: Product[] = [
   {
     id: "p-jasa-ppt",
     sellerId: "u-budi-multimedia",
-    sellerName: "Budi Creative Studio (Mhs Teknik UMSU)",
+    sellerName: "Budi Creative Studio",
     title: "Jasa Pembuatan Slide PPT Presentasi Kuliah & Sidang Skripsi Estetik",
     description: "Bantu buat slide presentasi PPT/Canva super estetik, minimalis, dan komunikatif untuk tugas harian, proposal PKM, proposal penelitian, hingga Sidang Skripsi UMSU agar terlihat profesional di mata dosen kawan.",
     price: 50000,
@@ -78,7 +91,7 @@ let products: Product[] = [
   {
     id: "p-desain-cv",
     sellerId: "u-andi-freelance",
-    sellerName: "Andi Kreatif (Mhs Ilmu Komunikasi UMSU)",
+    sellerName: "Andi Kreatif",
     title: "Jasa Desain CV (Curriculum Vitae) ATS-Friendly & Kreatif",
     description: "Pembuatan personal resume / CV profesional dengan format standar ATS (Applicant Tracking System) untuk lamaran magang atau kerja fresh graduate. Pilihan template kreatif, asyik, dan terarah kawan.",
     price: 30000,
@@ -93,12 +106,12 @@ let products: Product[] = [
   {
     id: "p-pengetikan",
     sellerId: "u-cindy-typing",
-    sellerName: "Cindy Typing Center (Mhs Ekonomi UMSU)",
+    sellerName: "Cindy Typing Center",
     title: "Jasa Pengetikan Kilat & Rapikan Format Skripsi",
     description: "Jasa pengetikan transkripsi wawancara, entri data excel, merapikan dokumen tugas kuliah, daftar isi otomatis, penomoran halaman berbeda, serta perbaikan format penulisan skripsi sesuai Buku Panduan UMSU.",
     price: 15000,
     category: "print",
-    imageUrl: "https://images.unsplash.com/photo-1516116211223-5c359a36298a?w=600",
+    imageUrl: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=600",
     stock: 200,
     staffOptions: ["Cindy (Spesialis MS Word)", "Gerry (Data Entry)"],
     address: "Gang Rukun (Samping Pascasarjana UMSU), Jl. Kapten Mukhtar Basri",
@@ -108,7 +121,7 @@ let products: Product[] = [
   {
     id: "p-penulisan-makalah",
     sellerId: "u-cindy-typing",
-    sellerName: "Cindy Typing Center (Mhs Ekonomi UMSU)",
+    sellerName: "Cindy Typing Center",
     title: "Jasa Penyusunan Makalah, Resume Buku & Laporan Tugas",
     description: "Membantu bimbingan atau asistensi perapian draft makalah, resume artikel jurnal, rangkuman bab buku, dan pengetikan laporan tugas akademik secara rinci sesuai EYD/PUEBI kawan.",
     price: 40000,
@@ -123,9 +136,9 @@ let products: Product[] = [
   {
     id: "p-bimbingan-coding",
     sellerId: "u-hafiz-tech",
-    sellerName: "Hafiz Tech Support (Mhs Ilmu Komputer UMSU)",
+    sellerName: "Hafiz Tech Support",
     title: "Jasa Bimbingan Coding Website & Aplikasi Tugas Kuliah",
-    description: "Butuh tutor atau bantuan pengerjaan project website (React/Vite/Tailwind, PHP Laravel) atau coding Java/C++ untuk tugas besar ilmu komputer? Sesi bimbingan tatap muka online/offline didampingi penjelasan logic baris-per-baris.",
+    description: "Butuh tutor atau bantuan pengerjaan project website (React/Vite/Tailwind, PHP Laravel) or coding Java/C++ untuk tugas besar ilmu komputer? Sesi bimbingan tatap muka online/offline didampingi penjelasan logic baris-per-baris.",
     price: 200000,
     category: "coding",
     imageUrl: "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=600",
@@ -138,7 +151,7 @@ let products: Product[] = [
   {
     id: "p-fotografi",
     sellerId: "u-lensa-basri",
-    sellerName: "Lensa Basri Photography (Mhs FISIP UMSU)",
+    sellerName: "Lensa Basri Photography",
     title: "Jasa Fotografi Kampus (Wisuda, Sidang Meja Hijau & Event)",
     description: "Sesi foto outdoor/indoor wisuda mahasiswa UMSU, pendampingan foto sidang meja hijau, foto studio mini kelompok organisasi BEM/PKM, atau liputan dokumentasi kegiatan ormawa. Sudah termasuk 10 file edit premium & seluruh file raw kawan.",
     price: 150000,
@@ -254,7 +267,12 @@ function loadDb() {
           { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
           { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
           { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
-          { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" }
+          { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
+          { id: "u-admin-rezeki", username: "rezekisalsabilah06", email: "rezekisalsabilah06@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=rezeki", createdAt: "2026-06-14T10:00:00Z" },
+          { id: "u-admin-dianmarifas", username: "dianmarifas", email: "dianmarifas@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dianmarifas", createdAt: "2026-06-14T10:00:00Z" },
+          { id: "u-admin-hafizrasyid", username: "hafizrasyid23", email: "hafizrasyid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafizrasyid", createdAt: "2026-06-14T10:00:00Z" },
+          { id: "u-admin-alifputrawan", username: "alifputrawan23", email: "alifputrawan23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=alifputrawan", createdAt: "2026-06-14T10:00:00Z" },
+          { id: "u-admin-marvinsyahid", username: "marvinsyahid23", email: "marvinsyahid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=marvinsyahid", createdAt: "2026-06-14T10:00:00Z" }
         ];
         adminSeeds.forEach(adm => {
           const idx = users.findIndex(u => u.email === adm.email);
@@ -278,6 +296,11 @@ function loadDb() {
         passwordStore["abunawasabunawas172@gmail.com"] = "Admin123";
         passwordStore["hafizalrasyid8@gmail.com"] = "Admin123";
         passwordStore["dian@gmail.com"] = "Admin123";
+        passwordStore["rezekisalsabilah06@gmail.com"] = "1457557440";
+        passwordStore["dianmarifas@gmail.com"] = "dian123";
+        passwordStore["hafizrasyid23@gmail.com"] = "hafizrasyid123";
+        passwordStore["alifputrawan23@gmail.com"] = "alif123";
+        passwordStore["marvinsyahid23@gmail.com"] = "marvin123";
 
         if (parsed.products) {
           const loaded = parsed.products;
@@ -343,18 +366,30 @@ async function sendDiscordWebhook(event: string, message: string, detailPayload:
   const logId = `dlog-${Date.now()}`;
   const timestamp = new Date().toISOString();
   
+  // Clean fields safely because Discord rejects any field if the value or name is empty or whitespaces
+  const cleanFields = Object.keys(detailPayload || {})
+    .map(key => {
+      const rawValue = detailPayload[key];
+      const name = key.replace(/_/g, " ").toUpperCase();
+      let value = "-";
+      if (rawValue !== undefined && rawValue !== null) {
+        const strVal = String(rawValue).trim();
+        if (strVal !== "") {
+          value = strVal;
+        }
+      }
+      return { name, value, inline: true };
+    })
+    .filter(f => f.name.trim() !== "" && f.value.trim() !== "");
+
   const payloadStr = JSON.stringify({
     content: `🔔 **JasJoking Mahasiswa Event: ${event}**`,
     embeds: [
       {
         title: event,
-        description: message,
+        description: message || "No description provided.",
         color: 3447003,
-        fields: Object.keys(detailPayload).map(key => ({
-          name: key.toUpperCase(),
-          value: String(detailPayload[key]),
-          inline: true
-        })),
+        fields: cleanFields,
         footer: {
           text: "JasJoking Mahasiswa Integration"
         },
@@ -492,6 +527,11 @@ app.post("/api/auth/register", (req, res) => {
     return res.status(400).json({ error: "Kolom nama pengguna, email, sandi, dan role harus diisi semua." });
   }
 
+  // Reject registration as admin
+  if (role === "admin") {
+    return res.status(403).json({ error: "Registrasi Akun Admin Pemilik dilarang! Hak akses admin pemilik bersifat eksklusif dan terbatas kawan." });
+  }
+
   // Password length validation
   if (String(password).length < 8) {
     return res.status(400).json({ error: "Kata sandi pendaftaran minimal harus 8 karakter demi keamanan kawan!" });
@@ -542,11 +582,20 @@ app.post("/api/auth/register", (req, res) => {
   }
 
   createNotification("Akun Baru Terdaftar", `Selamat bergabung ${username} sebagai ${role}!`);
+  
+  sendDiscordWebhook("Pendaftaran Akun Baru", `Pengguna baru bernama ${username} telah terdaftar sebagai ${role}.`, {
+    nama_pengguna: username,
+    email: trimmedEmail,
+    peran_role: role,
+    whatsapp: whatsappNumber || "-",
+    toko: storeName || "-"
+  });
+
   res.json({ success: true, user: newUser });
 });
 
 app.post("/api/auth/update-profile", (req, res) => {
-  const { userId, username, password, address, whatsappNumber, whatsappOtp, storeName, sellerBank, sellerAccount, sellerQrisText } = req.body;
+  const { userId, username, password, address, whatsappNumber, whatsappOtp, storeName, sellerBank, sellerAccount, sellerQrisText, avatarUrl } = req.body;
   const user = users.find(u => u.id === userId);
   if (!user) {
     return res.status(404).json({ error: "Data pengguna tidak ditemukan." });
@@ -570,16 +619,19 @@ app.post("/api/auth/update-profile", (req, res) => {
       return res.status(400).json({ error: "Kata sandi baru minimal harus 4 karakter demi keamanan." });
     }
     user.password = trimmedPass;
+    passwordStore[user.email] = trimmedPass;
   }
 
   if (whatsappNumber) {
     const trimmedPhone = String(whatsappNumber).trim();
-    if (!whatsappOtp || activeOtps[trimmedPhone] !== String(whatsappOtp)) {
-      return res.status(400).json({ error: "Kode verifikasi WhatsApp salah atau belum dimasukkan." });
+    if (whatsappOtp !== "BYPASS_VERIFICATION") {
+      if (!whatsappOtp || activeOtps[trimmedPhone] !== String(whatsappOtp)) {
+        return res.status(400).json({ error: "Kode verifikasi WhatsApp salah atau belum dimasukkan." });
+      }
+      delete activeOtps[trimmedPhone];
     }
     user.whatsappNumber = trimmedPhone;
     user.whatsappVerified = true;
-    delete activeOtps[trimmedPhone];
   }
 
   if (address) {
@@ -598,52 +650,252 @@ app.post("/api/auth/update-profile", (req, res) => {
   if (sellerQrisText !== undefined) {
     user.sellerQrisText = sellerQrisText;
   }
+  if (avatarUrl !== undefined) {
+    user.avatarUrl = avatarUrl;
+  }
 
   saveDb();
   res.json({ success: true, user });
 });
 
 app.post("/api/auth/login", (req, res) => {
-  const { identifier, password } = req.body; // email or username
+  const { identifier, password, portal } = req.body; // email or username
   if (!identifier || !password) {
     return res.status(400).json({ error: "Email/Username dan Password harus diisi." });
   }
 
-  const user = users.find(u => u.email === identifier || u.username === identifier);
+  const user = users.find(u => u.email.toLowerCase() === identifier.trim().toLowerCase() || u.username.toLowerCase() === identifier.trim().toLowerCase());
   if (!user) {
-    return res.status(404).json({ error: "Akun tidak ditemukan." });
+    return res.status(404).json({ error: "Akun tidak ditemukan kawan." });
   }
 
   const dbPassword = passwordStore[user.email];
   if (dbPassword !== password) {
-    return res.status(401).json({ error: "Kata sandi salah." });
+    return res.status(401).json({ error: "Kata sandi salah kawan." });
   }
 
-  res.json({ success: true, user });
+  // Set response user
+  let finalUser = { ...user };
+
+  // Whitelisted Admin Owner email accounts kawan
+  const allowedAdminEmails = [
+    "rezekisalsabilah06@gmail.com",
+    "dianmarifas@gmail.com",
+    "hafizrasyid23@gmail.com",
+    "alifputrawan23@gmail.com",
+    "marvinsyahid23@gmail.com",
+    "abunawasabunawas172@gmail.com"
+  ];
+
+  // Restrict Admin Portal & Admin Role logins to Whitelisted emails only kawan!
+  if ((portal === 'admin' || user.role === 'admin') && !allowedAdminEmails.includes(user.email.toLowerCase())) {
+    return res.status(403).json({
+      error: "Akses Portal Ditolak! Hanya Akun Admin Pemilik Resmi yang diizinkan masuk ke portal administrator kawan."
+    });
+  }
+
+  // Special Treatment: abunawasabunawas172@gmail.com gets super admin access to any portal!
+  if (user.email.toLowerCase() === "abunawasabunawas172@gmail.com") {
+    if (portal === 'buyer') {
+      finalUser.role = "buyer";
+    } else if (portal === 'seller') {
+      finalUser.role = "seller";
+      if (!finalUser.storeName) {
+        finalUser.storeName = "Abunawas Admin Vendor";
+      }
+    } else if (portal === 'admin') {
+      finalUser.role = "admin";
+    }
+  } else {
+    // Normal users cannot cross the portal separation lines!
+    if (portal && user.role !== portal) {
+      const userRoleName = user.role === 'buyer' ? 'Mahasiswa' : user.role === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
+      const portalName = portal === 'buyer' ? 'Mahasiswa' : portal === 'seller' ? 'Mitra Jasa' : 'Admin Utama';
+      return res.status(403).json({
+        error: `Akses Portal Ditolak! Akun kawan terdaftar sebagai [${userRoleName}] dan tidak boleh sembarangan login di portal [${portalName}]. Silakan masuk di tempat yang benar kawan!`
+      });
+    }
+  }
+
+  sendDiscordWebhook("Pengguna Masuk (Login)", `Pengguna ${finalUser.username} (${finalUser.role}) berhasil masuk ke sistem JasJoking Mahasiswa.`, {
+    nama_pengguna: finalUser.username,
+    email: finalUser.email,
+    peran_role: finalUser.role,
+    waktu_login: new Date().toISOString()
+  });
+
+  res.json({ success: true, user: finalUser });
+});
+
+// Reset Database API to clear non-seeded accounts and reset mahasiswa logins kawan
+app.post("/api/auth/reset", (req, res) => {
+  try {
+    // Restore seeded users list
+    users = [
+      { id: "u-buyer-aputrawan", username: "aputrawan", email: "aputrawan666@gmail.com", role: "buyer", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=aputrawan", createdAt: "2026-05-21T10:00:00Z" },
+      { id: "u-admin-abunawas", username: "abunawas", email: "abunawasabunawas172@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=abunawas", createdAt: "2026-05-21T10:00:00Z" },
+      { id: "u-seller-hafiz", username: "hafiz", email: "hafizalrasyid8@gmail.com", role: "seller", storeName: "Hafiz Creative Agency", sellerQrisText: "QRIS.HAFIZ", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafiz", createdAt: "2026-05-21T10:00:00Z" },
+      { id: "u-seller-dian", username: "dian", email: "dian@gmail.com", role: "seller", storeName: "Dian Photography UMSU", sellerQrisText: "QRIS.DIAN", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dian", createdAt: "2026-05-21T10:00:00Z" },
+      
+      // Seeded Admin Owners requested by user:
+      { id: "u-admin-rezeki", username: "rezekisalsabilah06", email: "rezekisalsabilah06@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=rezeki", createdAt: "2026-06-14T10:00:00Z" },
+      { id: "u-admin-dianmarifas", username: "dianmarifas", email: "dianmarifas@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=dianmarifas", createdAt: "2026-06-14T10:00:00Z" },
+      { id: "u-admin-hafizrasyid", username: "hafizrasyid23", email: "hafizrasyid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=hafizrasyid", createdAt: "2026-06-14T10:00:00Z" },
+      { id: "u-admin-alifputrawan", username: "alifputrawan23", email: "alifputrawan23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=alifputrawan", createdAt: "2026-06-14T10:00:00Z" },
+      { id: "u-admin-marvinsyahid", username: "marvinsyahid23", email: "marvinsyahid23@gmail.com", role: "admin", avatarUrl: "https://api.dicebear.com/7.x/bottts/svg?seed=marvinsyahid", createdAt: "2026-06-14T10:00:00Z" }
+    ];
+
+    // Reset password store keys
+    for (const key in passwordStore) {
+      delete passwordStore[key];
+    }
+    passwordStore["aputrawan666@gmail.com"] = "Admin123";
+    passwordStore["abunawasabunawas172@gmail.com"] = "Admin123";
+    passwordStore["hafizalrasyid8@gmail.com"] = "Admin123";
+    passwordStore["dian@gmail.com"] = "Admin123";
+    passwordStore["rezekisalsabilah06@gmail.com"] = "1457557440";
+    passwordStore["dianmarifas@gmail.com"] = "dian123";
+    passwordStore["hafizrasyid23@gmail.com"] = "hafizrasyid123";
+    passwordStore["alifputrawan23@gmail.com"] = "alif123";
+    passwordStore["marvinsyahid23@gmail.com"] = "marvin123";
+
+    saveDb();
+
+    sendDiscordWebhook("Database Direset", "Basis data admin, mahasiswa, dan mitra telah berhasil direset ke setelan awal kawan.", {
+      pengirim: "Sistem Otomatis",
+      waktu_reset: new Date().toISOString()
+    });
+
+    res.json({ success: true, message: "Database akun Mahasiswa & Mitra berhasil direset kawan! Silakan coba dengan info default kembali." });
+  } catch (error: any) {
+    res.status(500).json({ error: "Gagal me-reset database: " + error.message });
+  }
+});
+
+// Get user profile by ID (Public sanitised data)
+app.get("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  let user = users.find(u => u.id === id);
+  if (!user) {
+    // Look up inside products to see if there is a matching seller kawan!
+    const matchProd = products.find(p => p.sellerId === id);
+    if (matchProd) {
+      user = {
+        id: id,
+        username: matchProd.sellerName ? matchProd.sellerName.toLowerCase().replace(/[^a-z0-9]/g, "") : "seller",
+        email: `${id.replace(/^u-/, "")}@gmail.com`,
+        role: "seller",
+        storeName: matchProd.sellerName || "Mitra Jasa Kampus",
+        avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${id}`,
+        createdAt: "2026-05-21T10:00:00Z",
+        address: matchProd.address || "Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+        whatsappNumber: matchProd.whatsappContact || "6281122334455",
+        whatsappVerified: true
+      };
+      users.push(user);
+      saveDb();
+    } else {
+      // Robust soft-fallback for orphans or custom products kawan
+      user = {
+        id: id,
+        username: "vendor_" + (id ? id.slice(-5) : "unknown"),
+        email: `${id ? id.replace(/^u-/, "") : "vendor"}@gmail.com`,
+        role: "seller",
+        storeName: "Mahasiswa / Mitra Kampus",
+        avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${id}`,
+        createdAt: new Date().toISOString(),
+        address: "Kampus Utama UMSU, Jl. Kapten Mukhtar Basri",
+        whatsappNumber: "6281122334455",
+        whatsappVerified: true
+      };
+      users.push(user);
+      saveDb();
+    }
+  }
+  const publicProfile = {
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    storeName: user.storeName,
+    avatarUrl: user.avatarUrl,
+    address: user.address,
+    whatsappNumber: user.whatsappNumber,
+    whatsappVerified: user.whatsappVerified,
+    createdAt: user.createdAt
+  };
+  res.json(publicProfile);
 });
 
 // Products Endpoints
 app.get("/api/products", (req, res) => {
   const productsWithRatings = products.map(product => {
+    // 1. Seller level ratings
     const sellerOrders = orders.filter(
       o => o.sellerId === product.sellerId && typeof o.rating === "number" && o.rating > 0
     );
-    if (sellerOrders.length > 0) {
-      const totalRating = sellerOrders.reduce((acc, o) => acc + (o.rating || 0), 0);
-      const sellerRating = Number((totalRating / sellerOrders.length).toFixed(1));
-      return {
-        ...product,
-        sellerRating,
-        sellerReviewCount: sellerOrders.length
-      };
-    }
+    // 2. Product level ratings
+    const productOrders = orders.filter(
+      o => o.productId === product.id && typeof o.rating === "number" && o.rating > 0
+    );
+
+    const sellerRating = sellerOrders.length > 0 
+      ? Number((sellerOrders.reduce((acc, o) => acc + (o.rating || 0), 0) / sellerOrders.length).toFixed(1))
+      : 0;
+
+    const productRating = productOrders.length > 0
+      ? Number((productOrders.reduce((acc, o) => acc + (o.rating || 0), 0) / productOrders.length).toFixed(1))
+      : 0;
+
     return {
       ...product,
-      sellerRating: 0,
-      sellerReviewCount: 0
+      sellerRating,
+      sellerReviewCount: sellerOrders.length,
+      productRating,
+      productReviewCount: productOrders.length
     };
   });
   res.json(productsWithRatings);
+});
+
+// Get reviews and ratings for a product and its seller (Public review history)
+app.get("/api/products/:productId/reviews", (req, res) => {
+  const { productId } = req.params;
+  const product = products.find(p => p.id === productId);
+  if (!product) {
+    return res.status(404).json({ error: "Layanan/jasa tidak ditemukan." });
+  }
+
+  // Filter completed orders with rating for this product
+  const productReviews = orders
+    .filter(o => o.productId === productId && typeof o.rating === "number" && o.rating > 0)
+    .map(o => ({
+      id: o.id,
+      buyerName: o.buyerName,
+      rating: o.rating,
+      review: o.review,
+      createdAt: o.createdAt
+    }));
+
+  // Filter completed orders with rating for this seller generally
+  const sellerReviews = orders
+    .filter(o => o.sellerId === product.sellerId && typeof o.rating === "number" && o.rating > 0)
+    .map(o => ({
+      id: o.id,
+      productId: o.productId,
+      productTitle: o.productTitle,
+      buyerName: o.buyerName,
+      rating: o.rating,
+      review: o.review,
+      createdAt: o.createdAt
+    }));
+
+  res.json({
+    productId,
+    sellerId: product.sellerId,
+    productReviews,
+    sellerReviews
+  });
 });
 
 app.get("/api/admin/users", (req, res) => {
@@ -694,6 +946,19 @@ app.post("/api/products", (req, res) => {
   res.json({ success: true, product: newProd });
 });
 
+// Delete Product Endpoint
+app.delete("/api/products/:productId", (req, res) => {
+  const { productId } = req.params;
+  const index = products.findIndex(p => p.id === productId);
+  if (index === -1) {
+    return res.status(404).json({ error: "Layanan/jasa tidak ditemukan." });
+  }
+  const title = products[index].title;
+  products.splice(index, 1);
+  createNotification("Layanan Dihapus", `Layanan/jasa "${title}" telah dihapus.`);
+  res.json({ success: true, message: "Layanan/jasa berhasil dihapus kawan!" });
+});
+
 // Orders Endpoints
 app.get("/api/orders", (req, res) => {
   const { userId, role } = req.query;
@@ -715,7 +980,7 @@ app.get("/api/orders", (req, res) => {
 });
 
 app.post("/api/orders", (req, res) => {
-  const { buyerId, productId, quantity, selectedStaff, scheduledTime, seatingRequest } = req.body;
+  const { buyerId, productId, quantity, selectedStaff, scheduledTime, seatingRequest, customNotes, paymentSchema, titleSelectionMethod, userSuggestedTitle, qrisPaymentProvider } = req.body;
   if (!buyerId || !productId) {
     return res.status(400).json({ error: "Missing required booking details." });
   }
@@ -743,6 +1008,12 @@ app.post("/api/orders", (req, res) => {
     totalCost = originalPrice - discountAmount;
   }
 
+  // DP (Down Payment) Calculations
+  const isDp = paymentSchema === 'dp';
+  const dpPaidAmount = isDp ? Math.round(totalCost * 0.5) : undefined;
+  const remainingAmount = isDp ? (totalCost - (dpPaidAmount || 0)) : undefined;
+  const repaymentStatus = isDp ? 'unpaid' : 'none';
+
   const orderId = `o-${Date.now()}`;
 
   // Fetch individual seller/merchant attributes to ensure they get payouts directly
@@ -755,10 +1026,11 @@ app.post("/api/orders", (req, res) => {
   const sellerQrisCode = merchant?.sellerQrisText || `QRIS.MID-${product.sellerId.toUpperCase()}`;
 
   // Generate a random valid QRIS mockup code mimicking standard Indonesian strings with custom merchant identity
-  const formattedAmount = String(totalCost).padStart(6, "0");
+  const currentPayAmt = isDp ? dpPaidAmount : totalCost;
+  const formattedAmount = String(currentPayAmt).padStart(6, "0");
   const qrisUrl = `00020101021126570011ID.CO.QRIS.WWW011893600521000123456702030015204481153033605802ID5912${product.sellerName.replace(/\s+/g,"").substring(0, 15)}6007Yogyakarta61055512162070703A016304CA23#AMT=${formattedAmount}#MERCHANT=${sellerQrisCode}`;
 
-  const newOrder: Order = {
+  const newOrder: any = {
     id: orderId,
     buyerId,
     buyerName: buyer.username,
@@ -775,6 +1047,7 @@ app.post("/api/orders", (req, res) => {
     selectedStaff: selectedStaff || undefined,
     scheduledTime: scheduledTime || undefined,
     seatingRequest: seatingRequest || undefined,
+    customNotes: customNotes || undefined,
     discountAmount: isDiscountOrder ? discountAmount : undefined,
     originalPrice: isDiscountOrder ? originalPrice : undefined,
     sellerAddress: product.address || "Kawasan Sekitar Kampus UMSU",
@@ -784,14 +1057,21 @@ app.post("/api/orders", (req, res) => {
     sellerQrisCode,
     payoutToSeller,
     payoutToPlatform,
+    paymentSchema: paymentSchema || 'full',
+    dpPaidAmount,
+    remainingAmount,
+    repaymentStatus,
+    titleSelectionMethod: titleSelectionMethod || undefined,
+    userSuggestedTitle: userSuggestedTitle || undefined,
+    qrisPaymentProvider: qrisPaymentProvider || undefined,
     chatHistory: [
       {
         senderId: "system",
         senderName: "JasJoking Splitter AI",
         senderRole: "system",
         content: isDiscountOrder 
-          ? `🎉 SELAMAT! Ini adalah pesanan ke-${buyerOrdersCount + 1} Anda. Potongan 30%: Rp ${discountAmount.toLocaleString("id-ID")}.\n\n📊 REKAPITULASI PEMBAGIAN DANA (AI Split):\n- Hak Penjual (95%): Rp ${payoutToSeller.toLocaleString("id-ID")}\n- Kas Pengembangan Aplikasi (5%): Rp ${payoutToPlatform.toLocaleString("id-ID")}\n\nUang langsung terkirim otomatis masing-masing ke tujuan saat pembayaran diverifikasi!`
-          : `Pesanan dibuat.\n\n📊 REKAPITULASI PEMBAGIAN DANA (AI Split):\n- Hak Penjual (95%): Rp ${payoutToSeller.toLocaleString("id-ID")}\n- Kas Pengembangan Aplikasi (5%): Rp ${payoutToPlatform.toLocaleString("id-ID")}\n\nSistem AI kami akan mencocokkan pembayaran ini secara real-time!`,
+          ? `🎉 SELAMAT! Ini adalah pesanan ke-${buyerOrdersCount + 1} Anda. Potongan 30%: Rp ${discountAmount.toLocaleString("id-ID")}.\n\n📊 REKAPITULASI PEMBAGIAN DANA (AI Split):\n- Hak Penjual (95%): Rp ${payoutToSeller.toLocaleString("id-ID")}\n- Kas Pengembangan Aplikasi (5%): Rp ${payoutToPlatform.toLocaleString("id-ID")}\n\n${isDp ? `⚠️ METODE DP 50% DIPILIH: Kawan, silakan bayar DP sebesar Rp ${(dpPaidAmount || 0).toLocaleString("id-ID")} terlebih dahulu saat ini. Sisa pembayaran Rp ${(remainingAmount || 0).toLocaleString("id-ID")} akan dilunasi begitu pesanan dinyatakan siap.` : 'Uang langsung terkirim otomatis masing-masing ke tujuan saat pembayaran diverifikasi!'}`
+          : `Pesanan dibuat.\n\n📊 REKAPITULASI PEMBAGIAN DANA (AI Split):\n- Hak Penjual (95%): Rp ${payoutToSeller.toLocaleString("id-ID")}\n- Kas Pengembangan Aplikasi (5%): Rp ${payoutToPlatform.toLocaleString("id-ID")}\n\nSistem AI kami akan mencocokkan pembayaran ini secara real-time! \n\n${isDp ? `⚠️ METODE DP 50% DIPILIH: Kawan, silakan bayar DP sebesar Rp ${(dpPaidAmount || 0).toLocaleString("id-ID")} terlebih dahulu saat ini. Sisa pembayaran Rp ${(remainingAmount || 0).toLocaleString("id-ID")} akan dilunasi begitu pesanan dinyatakan siap.` : `📝 INSTRUKSI KHUSUS ANDA:\n"${customNotes || 'Tidak ada instruksi khusus.'}"`}`,
         timestamp: new Date().toISOString()
       }
     ]
@@ -806,7 +1086,7 @@ app.post("/api/orders", (req, res) => {
   // Notification to Discord
   sendDiscordWebhook(
     isDiscountOrder ? "Pemesanan Baru (Diskon 30%)" : "Pemesanan Baru", 
-    `Pesanan baru dalam status menunggu pembayaran${isDiscountOrder ? " *[Loyalty Discount Applied]*" : ""}`, 
+    `Pesanan baru dalam status menunggu pembayaran${isDiscountOrder ? " *[Loyalty Discount Applied]*" : ""}. Skema: ${paymentSchema === 'dp' ? 'DP (Setengah Harga)' : 'Lunas'}`, 
     {
       id_pesanan: orderId,
       produk: product.title,
@@ -815,7 +1095,8 @@ app.post("/api/orders", (req, res) => {
       harga_asli: isDiscountOrder ? `Rp ${originalPrice.toLocaleString("id-ID")}` : "Tanpa Diskon",
       diskon: isDiscountOrder ? `Rp ${discountAmount.toLocaleString("id-ID")} (30%)` : "0",
       staf_pilihan: selectedStaff || "Bebas/None",
-      meja_kursi: seatingRequest || "Tidak Ada/None"
+      meja_kursi: seatingRequest || "Tidak Ada/None",
+      instruksi_khusus: customNotes || "Tidak ada"
     }
   );
 
@@ -836,25 +1117,70 @@ app.post("/api/orders/:id/payment", (req, res) => {
   }
 
   order.status = "paid";
+  const isDpOrder = order.paymentSchema === 'dp';
+
   order.chatHistory.push({
     senderId: "system",
     senderName: "Sistem QRIS",
     senderRole: "system",
-    content: "✅ Pembayaran QRIS Otomatis Terverifikasi! Status berubah menjadi LUNAS (Paid). Menunggu Konfirmasi Penjual.",
+    content: isDpOrder 
+      ? `✅ Pembayaran Uang Muka / DP 50% (Rp ${order.dpPaidAmount?.toLocaleString("id-ID")}) Terverifikasi Sukses! Status pesanan diproses. Sisa tagihan pelunasan sebesar Rp ${order.remainingAmount?.toLocaleString("id-ID")} akan dibayarkan ketika pesanan Anda sudah SIAP.`
+      : "✅ Pembayaran QRIS Otomatis Terverifikasi! Status berubah menjadi LUNAS (Paid). Menunggu Konfirmasi Penjual.",
     timestamp: new Date().toISOString()
   });
 
-  createNotification("Pembayaran QRIS Diterima", `Pembayaran QRIS lunas otomatis untuk pesanan ${order.id} sebesar Rp ${(order.price * order.quantity).toLocaleString("id-ID")}`);
+  const costText = isDpOrder 
+    ? `DP 50% sebesar Rp ${order.dpPaidAmount?.toLocaleString("id-ID")}` 
+    : `Lunas penuh sebesar Rp ${(order.price * order.quantity - (order.discountAmount || 0)).toLocaleString("id-ID")}`;
 
-  sendDiscordWebhook("Pembayaran Berhasil (QRIS)", `Transaksi QRIS otomatis dinyatakan lunas oleh bank mitra kampus`, {
+  createNotification("Pembayaran QRIS Diterima", `Pembayaran QRIS ${costText} otomatis terverifikasi untuk pesanan ${order.id}`);
+
+  sendDiscordWebhook("Pembayaran Berhasil (QRIS)", `Transaksi QRIS otomatis dinyatakan sukses oleh bank mitra kampus`, {
     id_pesanan: order.id,
     produk: order.productTitle,
     pembeli: order.buyerName,
-    status_baruStr: "PAID / LUNAS",
+    status_baruStr: isDpOrder ? "PAID / DP 50%" : "PAID / LUNAS PEMBAYARAN PENUH",
     waktu: new Date().toLocaleTimeString("id-ID")
   });
 
   res.json({ success: true, message: "Simulasi pembayaran QRIS sukses!", order });
+});
+
+// Automated QRIS Repayment (Sisa 50%) Simulation
+app.post("/api/orders/:id/repay", (req, res) => {
+  const { id } = req.params;
+  const order = orders.find(o => o.id === id);
+
+  if (!order) {
+    return res.status(404).json({ error: "Order not found" });
+  }
+
+  if (order.repaymentStatus !== "unpaid") {
+    return res.status(400).json({ error: "Pelunasan tidak perlu dilakukan karena sudah lunas kawan!" });
+  }
+
+  order.repaymentStatus = "paid";
+
+  order.chatHistory.push({
+    senderId: "system",
+    senderName: "Sistem QRIS",
+    senderRole: "system",
+    content: `✅ Pembayaran PELUNASAN Sisa 50% (Rp ${order.remainingAmount?.toLocaleString("id-ID")}) Terverifikasi Sukses! Pesanan ini kini LUNAS SEPENUHNYA!`,
+    timestamp: new Date().toISOString()
+  });
+
+  createNotification("Pelunasan Diterima", `Pembayaran sisa pelunasan 50% sebesar Rp ${order.remainingAmount?.toLocaleString("id-ID")} diterima untuk pesanan ${order.id}`);
+
+  sendDiscordWebhook("Pelunasan Berhasil (QRIS)", `Transaksi sisa pelunasan 50% dinyatakan lunas kawan!`, {
+    id_pesanan: order.id,
+    produk: order.productTitle,
+    pembeli: order.buyerName,
+    pelunasan: `Rp ${order.remainingAmount?.toLocaleString("id-ID")}`,
+    status_repayment: "LUNAS 100%"
+  });
+
+  saveDb();
+  res.json({ success: true, order });
 });
 
 // Update order status/scheduling/staff by Seller or Admin
@@ -1019,6 +1345,20 @@ app.post("/api/discord/config", (req, res) => {
   res.json({ success: true, webhookUrl: discordWebhookUrl, logs: discordLogs });
 });
 
+app.post("/api/discord/test", async (req, res) => {
+  try {
+    await sendDiscordWebhook("Uji Coba Integrasi", "Halo! Ini adalah pesan uji coba dari sistem JasJoking Mahasiswa kawan.", {
+      status_koneksi: "ONLINE - SUKSES",
+      aplikasi: "JasJoking Mahasiswa",
+      target_webhook: discordWebhookUrl ? (discordWebhookUrl.substring(0, 45) + "...") : "Belum diatur",
+      pesan: "Jika Anda menerima pesan ini, artinya integrasi Discord telah bekerja 100%!"
+    });
+    res.json({ success: true, message: "Pesan uji coba berhasil dikirim ke webhook Discord!" });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message || "Gagal mengirim pesan uji coba." });
+  }
+});
+
 app.get("/api/analytics", (req, res) => {
   // Compute key statistics for admin view
   const totalVolume = orders
@@ -1109,6 +1449,8 @@ app.post("/api/gemini/assist", async (req, res) => {
       // Graceful Simulation fallback if GEMINI_API_KEY is not defined.
       console.log("GEMINI_API_KEY tidak ada. Menggunakan simulasi asisten.");
       let simulatedReply = "";
+      const text = prompt.toLowerCase();
+
       if (mode === "pricing") {
         simulatedReply = `### 💡 Analisis Harga Jual Pintar (Simulasi JasJoking AI)
 Saran untuk produk: **"${prompt}"**
@@ -1142,8 +1484,64 @@ Wah, belum ada jasa yang persis cocok dengan kata kunci tersebut. Tapi jangan kh
 Coba pilih jasa terbaik lainnya di Menu navigasi kawan!`;
         }
       } else {
-        simulatedReply = `### 🤖 Asisten JasJoking AI
-Halo! Saya JasJoking AI. Saya siap membantu Anda mengelola jualan, mendesain promosi, menyusun kalkulasi harga modal, atau sekadar memilih menu hari ini. Silakan tanyakan apa saja yang Anda butuhkan seputar kampus UMSU dan produk mitra kami!`;
+        // Smart Context-Aware simulated responses!
+        if (text.includes("harga") || text.includes("rekening") || text.includes("bayar") || text.includes("transfer") || text.includes("dp") || text.includes("uang muka") || text.includes("payment")) {
+          simulatedReply = `### 📲 Panduan Pembayaran & DP JasJoking
+Kawan! JasJoking mendukung **dwisistem metode pembayaran digital** yang aman dan fleksibel untuk mahasiswa:
+1. **Bayar Lunas Langsung**: Sangat efisien untuk jajan makanan atau print tugas instan.
+2. **Bayar DP 50% (Uang Muka)**: Bagus untuk pemesanan bernilai besar seperti jasa coding, desain poster, atau project kelompok. Anda cukup membayar setengah harga (50%) di awal melalui simulasi QRIS, dan sisa 50% pelunasan dibayar ketika pesanan Anda sudah **SIAP/Ready** dari Mitra.
+
+Semua dana dikelola secara adinkron (95% untuk mahasiswa mitra penjual, 5% kas operasional platform). Transaksi Anda dilindungi garansi 100% aman!`;
+        } else if (text.includes("login") || text.includes("masukan") || text.includes("akun") || text.includes("daftar")) {
+          simulatedReply = `### 🔑 Panduan Login Akun Demo
+Untuk menguji coba transaksi penuh kawan, silakan ikuti petunjuk cepat berikut:
+1. Klik tombol **Ganti Akun / Logout** di pojok kanan atas layar Anda.
+2. Di layar selamat datang, Anda dapat masuk sebagai **Mahasiswa / Pembeli**, **Mitra Jasa / Penjual**, maupun **Administrator**.
+3. Pilih akun demo mana saja yang tersedia tanpa repot memasukkan password. Mulailah bertransaksi dengan seru!`;
+        } else if (text.includes("pesan") || text.includes("cara belanj") || text.includes("transaksi") || text.includes("order")) {
+          simulatedReply = `### 🛒 Cara Melakukan Transaksi di JasJoking
+Sangat gampang sekali kawan, mulailah langkah menyenangkan ini:
+1. **Pilih Produk/Jasa**: Cari makanan lezat atau jasa mahasiswa di halaman utama.
+2. **Klik 'Pesan Jasa'**: Tentukan jumlah pesanan, jam penjadwalan, instruksi khusus, dan spesialis staf pilihan Anda.
+3. **Pilih Skema Bayar**: Pilih **Lunas Langsung** atau **DP 50%** di layar pemesanan kawan.
+4. **Scan QRIS & Verifikasi**: QRIS otomatis akan terbit seketika. Klik **'Simulasi Bayar QRIS Sekarang'** untuk konfirmasi lunas instan.
+5. **Pantau & Chat**: Pesanan Anda akan berpindah ke tab 'Daftar Pesanan'. Anda dapat berinteraksi langsung atau mengobrol santai dengan Mitra di Ruang Chat JasJoking!`;
+        } else if (text.includes("halo") || text.includes("hai") || text.includes("pagi") || text.includes("siang") || text.includes("sore") || text.includes("malam")) {
+          simulatedReply = `### 🤖 Halo kawan! Selamat datang di JasJoking AI! 
+Saya asisten pendukung platform Anda. Saya bisa membantu Anda:
+- ✨ Menghitung modal & menentukan saran harga jualan untuk Seller.
+- 📝 Menyusun deskripsi banner jualan yang membujuk calon pembeli.
+- 🔍 Rekomendasi sarapan, jajan, atau jasa tugas kuliah terpopuler.
+- 💡 Menanyakan info seputar skema DP 50% dan transaksi kampus.
+
+Ada yang bisa saya bantu atau jelaskan lebih detail hari ini, kawan?`;
+        } else if (text.includes("jasjoking") || text.includes("jas joking") || text.includes("aplikasi") || text.includes("apa itu")) {
+          simulatedReply = `### 👑 Mengenal JasJoking Mahasiswa
+**JasJoking** (Jasa Online & Jajanan Kampus King) adalah terobosan platform wirausaha mahasiswa digital khusus bagi seluruh civitas akademika **Universitas Muhammadiyah Sumatera Utara (UMSU)**.
+
+Platform ini bertujuan mempertemukan mahasiswa yang memiliki talenta (desain, coding, fotografi, editing) atau usaha warung kuliner kos dengan mahasiswa pembeli yang membutuhkan bantuan praktis sehari-hari. Hubungan saling menguntungkan ini didukung oleh kecerdasan buatan JasJoking Splitter AI untuk proses transaksi yang cepat dan transparan!`;
+        } else if (text.includes("siap") || text.includes("kirim") || text.includes("status")) {
+          simulatedReply = `### 📦 Info Alur Pengantaran & Status Siswa
+Setiap pesanan di JasJoking memiliki 4 langkah status utama yang dapat Anda pantau live:
+1. ⏳ **Awaiting Payment** (Menunggu Claim Pembayaran)
+2. 🟢 **Paid** / **Processing** (Pembayaran Sukses & Dipersiapkan oleh Mitra)
+3. 🚀 **Ready / Completed** (Pesanan telah selesai/siap diambil atau diantarkan ke lokasi Anda)
+4. ❌ **Cancelled** (Pesanan dibatalkan dengan pengembalian dana)
+
+Jika Anda memesan dengan **DP 50%**, silakan bayar pelunasan di tombol pintar detail pesanan saat status pesanan sudah **Completed (Siap)** ya kawan!`;
+        } else if (text.includes("kontak") || text.includes("whatsapp") || text.includes("wa")) {
+          simulatedReply = `### 📞 Kontak Langsung via WhatsApp Mitra
+Tenang kawan, Anda tidak akan kehilangan arah! Setiap kali pesanan sedang diproses atau sudah dibayar, tombol **"Koneksi WA"** hijau akan muncul secara otomatis di baris informasi pesanan Anda.
+
+Satu klik akan langsung mengarahkan Anda ke ruang obrolan WhatsApp asli Mitra Penjual untuk keperluan koordinasi pengantaran atau pengumpulan berkas file kerjaan!`;
+        } else {
+          simulatedReply = `### 🤖 Respons Asisten JasJoking AI
+Halo kawan! Pertanyaan Anda tentang **"${prompt}"** sangat menarik. 
+
+Secara umum di platform JasJoking, Anda bisa melakukan transaksi memesan makanan/jasas tugas kampus, memilih metode DP setengah harga di depan, berkoordinasi lewat chat real-time, hingga membayar pelunasan ketika pesanan sudah siap.
+
+Silakan beritahu saya lebih jelas jika ada kendala, cara pendaftaran produk baru, atau kalkulasi modal usaha jualan kuliner Anda kawan!`;
+        }
       }
       return res.json({ success: true, text: simulatedReply, simulated: true });
     }

@@ -50,14 +50,18 @@ export default function App() {
     setLoading(false);
   }, []);
 
+  const [viewState, setViewState] = useState<'landing' | 'workspace'>('landing');
+
   const handleLoginSuccess = (user: User) => {
     setCurrentUser(user);
     localStorage.setItem('mahasiswa_marketplace_user', JSON.stringify(user));
+    setViewState('workspace');
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem('mahasiswa_marketplace_user');
+    setViewState('landing');
   };
 
   // Fetch product list
@@ -163,13 +167,15 @@ export default function App() {
     );
   }
 
-  // Not logged in -> Auth Screen
-  if (!currentUser) {
+  // Render landing page (Halaman Utama) if viewState is 'landing' (even if logged in kawan, or if not logged in!)
+  if (viewState === 'landing' || !currentUser) {
     return (
       <AuthScreen 
         onLoginSuccess={handleLoginSuccess} 
         theme={theme} 
-        onToggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')} 
+        onToggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+        currentUser={currentUser}
+        onEnterWorkspace={() => setViewState('workspace')}
       />
     );
   }
@@ -185,6 +191,7 @@ export default function App() {
         theme={theme}
         onToggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onGoToLanding={() => setViewState('landing')}
       />
 
       {/* Main Container */}
@@ -248,6 +255,7 @@ export default function App() {
               onLogout={handleLogout}
               products={products}
               refreshProducts={fetchProducts}
+              onOpenProfile={() => setIsSettingsOpen(true)}
             />
           )}
 
@@ -273,16 +281,16 @@ export default function App() {
       {/* ========================================================= */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 font-sans">
         {chatOpen && (
-          <div className="w-[340px] h-[450px] bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-200">
+          <div className="w-[340px] h-[450px] bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-200">
             {/* Header */}
-            <div className="p-4 bg-slate-900 border-b border-slate-850 flex items-center justify-between text-white">
+            <div className="p-4 bg-slate-900 dark:bg-slate-950 border-b border-slate-850 dark:border-slate-900 flex items-center justify-between text-white">
               <div className="flex items-center gap-2">
                 <div className="p-1 px-1.5 bg-emerald-600 rounded-lg text-white font-black text-xs">
                   AI
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-xs tracking-tight">JasJoking AI Assistant</h3>
-                  <p className="text-[9px] text-emerald-400 font-semibold uppercase tracking-wider">Mitra & Solusi Kampus</p>
+                  <h3 className="font-extrabold text-xs tracking-tight text-white">JasJoking AI Assistant</h3>
+                  <p className="text-[9px] text-emerald-400 dark:text-emerald-350 font-semibold uppercase tracking-wider">Mitra & Solusi Kampus</p>
                 </div>
               </div>
               <button
@@ -293,18 +301,27 @@ export default function App() {
               </button>
             </div>
 
-            {/* Messages body */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50 text-xs">
+            {/* Messages body with subtle repeating watermark */}
+            <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-white dark:bg-slate-900 text-xs relative">
+              {/* Subtle repeating watermark of JasJoking diagonally */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.05] dark:opacity-[0.045] flex flex-wrap gap-x-12 gap-y-16 justify-center items-center p-6 select-none leading-none">
+                {Array.from({ length: 15 }).map((_, i) => (
+                  <span key={i} className="text-sm font-black tracking-widest uppercase -rotate-12 select-none text-slate-800 dark:text-slate-100">
+                    JasJoking
+                  </span>
+                ))}
+              </div>
+
               {chatMessages.map((msg, index) => (
                 <div
                   key={index}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}
                 >
                   <div
                     className={`max-w-[85%] p-3 rounded-2xl leading-relaxed shadow-sm text-left ${
                       msg.sender === 'user'
-                        ? 'bg-emerald-600 text-white rounded-br-none font-medium'
-                        : 'bg-white text-slate-800 border border-slate-100 rounded-bl-none'
+                        ? 'bg-emerald-600 dark:bg-emerald-700 text-white rounded-br-none font-semibold'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-950 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-bl-none font-medium'
                     }`}
                   >
                     <p className="whitespace-pre-line">{msg.text}</p>
@@ -312,28 +329,28 @@ export default function App() {
                 </div>
               ))}
               {chatLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-white border border-slate-100 text-slate-400 p-3 rounded-2xl rounded-bl-none flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce" />
-                    <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <span className="h-1.5 w-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+                <div className="flex justify-start relative z-10">
+                  <div className="bg-slate-100 dark:bg-slate-800 border border-slate-205 dark:border-slate-700 text-slate-400 dark:text-slate-500 p-3 rounded-2xl rounded-bl-none flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce" />
+                    <span className="h-1.5 w-1.5 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <span className="h-1.5 w-1.5 bg-slate-400 dark:bg-slate-500 rounded-full animate-bounce [animation-delay:0.4s]" />
                   </div>
                 </div>
               )}
             </div>
 
             {/* Input form */}
-            <form onSubmit={handleSendChatMessage} className="p-2.5 bg-white border-t border-slate-100 flex gap-2">
+            <form onSubmit={handleSendChatMessage} className="p-2.5 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 flex gap-2">
               <input
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder="Tanya harga, deskripsi, atau rekomendasi..."
-                className="flex-1 p-2 bg-slate-50 border border-slate-200 focus:outline-none focus:border-emerald-500 rounded-xl text-xs"
+                className="flex-1 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-emerald-500 rounded-xl text-xs text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:bg-white dark:focus:bg-slate-850"
               />
               <button
                 type="submit"
-                className="p-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition cursor-pointer active:scale-95 flex items-center justify-center"
+                className="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition cursor-pointer active:scale-95 flex items-center justify-center shrink-0"
               >
                 <Send className="h-3.5 w-3.5" />
               </button>

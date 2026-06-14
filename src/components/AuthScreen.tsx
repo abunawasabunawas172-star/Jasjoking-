@@ -33,24 +33,107 @@ import {
   CheckCircle2,
   ChevronRight,
   AlertTriangle,
-  Play
+  Play,
+  RefreshCw,
+  Users,
+  Globe
 } from 'lucide-react';
 
 interface AuthScreenProps {
   onLoginSuccess: (user: User) => void;
   theme?: 'light' | 'dark';
   onToggleTheme?: () => void;
+  currentUser?: User | null;
+  onEnterWorkspace?: () => void;
 }
 
 type PortalType = 'buyer' | 'seller' | 'admin';
-type ActiveViewType = 'beranda' | 'proposal' | 'auth' | 'peringatan';
+type ActiveViewType = 'beranda' | 'proposal' | 'auth' | 'peringatan' | 'identitas';
 
-export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenProps) {
+export function AuthScreen({ onLoginSuccess, theme, onToggleTheme, currentUser, onEnterWorkspace }: AuthScreenProps) {
   const [activeView, setActiveView] = useState<ActiveViewType>('beranda');
   const [menuOpen, setMenuOpen] = useState(false);
   const [portal, setPortal] = useState<PortalType>('buyer');
   const [isRegister, setIsRegister] = useState(false);
   const [role, setRole] = useState<UserRole>('buyer');
+
+  // Team Identity states (Customizable & Persistent)
+  const [teamName, setTeamName] = useState(() => localStorage.getItem('jasjoking_team_name') || 'Tim Pengembang JasJoking Mahasiswa (Kelompok 6)');
+  const [repoLink, setRepoLink] = useState(() => localStorage.getItem('jasjoking_repo_link') || 'https://github.com/abunawasabunawas172/jasjoking-mahasiswa');
+  const [deployLink, setDeployLink] = useState(() => localStorage.getItem('jasjoking_deploy_link') || 'https://ais-pre-yaiqktu26ei3owfg7rdh42-84500551359.asia-east1.run.app');
+  const [jobDesc, setJobDesc] = useState(() => localStorage.getItem('jasjoking_job_desc') || `PRE-REQUISITES (TEKNOLOGI): React.js, Tailwind CSS, TypeScript, Express.js (Node.js), Drizzle ORM, WebSockets, Lucide Icons, Recharts
+
+1. Rezeki Salsabilah (Ketua Tim / Project Manager & Lead Designer)
+Spesialisasi Teknologi: React.js, Tailwind CSS, Figma & Git
+Job Desc: Mengoordinasikan seluruh alur siklus pengembangan aplikasi, menyusun struktur rancangan visual antarmuka (UI/UX) premium, serta bertanggung jawab penuh atas manajemen tugas tim Kelompok 6 secara terstruktur.
+
+2. Hafiz Al Rasyid (Front-End Developer & UI Engineer)
+Spesialisasi Teknologi: React.js (Vite), Tailwind CSS, Lucide Icons & TypeScript
+Job Desc: Membangun komponen antarmuka interaktif sisi pembeli (Buyer Panel), mengoptimalkan kegunaan desain responsif di browser, serta menyusun fungsionalitas obrolan chat real-time dan status bayar QRIS kawan.
+
+3. Dian Maarifa Sianturi (Back-End Developer & API Integrator)
+Spesialisasi Teknologi: Node.js, Express.ts Server, Drizzle ORM & TypeScript
+Job Desc: Membangun server backend Express, mendesain skema relasional database kawan, serta bertanggung jawab atas integrasi endpoint REST API antara data transaksi pembeli dan dashboard penyedia jasa (Seller Panel).
+
+4. Alif Putrawan (Security Engineer & Authentication Specialist)
+Spesialisasi Teknologi: JWT Session, Crypto OTP Security, React Hooks & TypeScript
+Job Desc: Merancang sistem keamanan otentikasi akun mahasiswa & mitra, mengimplementasikan pengiriman simulasi kode verifikasi OTP rahasia ganda, serta mengamankan alur otorisasi login kawan.
+
+5. Muhammad Marvin Syahid (QA & Data Analyst Engineer)
+Spesialisasi Teknologi: Recharts (D3), JSON Data Store, Jest & TypeScript
+Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS instan otomatis, merancang modul pencatatan statistik grafik (Recharts) di panel admin, serta menjaga keutuhan sinus/sinkronisasi database_store JSON.`);
+  const [isEditingTeam, setIsEditingTeam] = useState(false);
+  const [saveTeamSuccess, setSaveTeamSuccess] = useState('');
+
+  const handleSaveTeamInfo = () => {
+    localStorage.setItem('jasjoking_team_name', teamName);
+    localStorage.setItem('jasjoking_repo_link', repoLink);
+    localStorage.setItem('jasjoking_deploy_link', deployLink);
+    localStorage.setItem('jasjoking_job_desc', jobDesc);
+    setIsEditingTeam(false);
+    setSaveTeamSuccess('Identitas Tim Pengembang Berhasil Diperbarui!');
+    setTimeout(() => setSaveTeamSuccess(''), 3000);
+  };
+
+  const handleResetTeamPreset = () => {
+    const defaultTeamName = 'Tim Pengembang JasJoking Mahasiswa (Kelompok 6)';
+    const defaultRepoLink = 'https://github.com/abunawasabunawas172/jasjoking-mahasiswa';
+    const defaultDeployLink = 'https://ais-pre-yaiqktu26ei3owfg7rdh42-84500551359.asia-east1.run.app';
+    const defaultJobDesc = `PRE-REQUISITES (TEKNOLOGI): React.js, Tailwind CSS, TypeScript, Express.js (Node.js), Drizzle ORM, WebSockets, Lucide Icons, Recharts
+
+1. Rezeki Salsabilah (Ketua Tim / Project Manager & Lead Designer)
+Spesialisasi Teknologi: React.js, Tailwind CSS, Figma & Git
+Job Desc: Mengoordinasikan seluruh alur siklus pengembangan aplikasi, menyusun struktur rancangan visual antarmuka (UI/UX) premium, serta bertanggung jawab penuh atas manajemen tugas tim Kelompok 6 secara terstruktur.
+
+2. Hafiz Al Rasyid (Front-End Developer & UI Engineer)
+Spesialisasi Teknologi: React.js (Vite), Tailwind CSS, Lucide Icons & TypeScript
+Job Desc: Membangun komponen antarmuka interaktif sisi pembeli (Buyer Panel), mengoptimalkan kegunaan desain responsif di browser, serta menyusun fungsionalitas obrolan chat real-time dan status bayar QRIS kawan.
+
+3. Dian Maarifa Sianturi (Back-End Developer & API Integrator)
+Spesialisasi Teknologi: Node.js, Express.ts Server, Drizzle ORM & TypeScript
+Job Desc: Membangun server backend Express, mendesain skema relasional database kawan, serta bertanggung jawab atas integrasi endpoint REST API antara data transaksi pembeli dan dashboard penyedia jasa (Seller Panel).
+
+4. Alif Putrawan (Security Engineer & Authentication Specialist)
+Spesialisasi Teknologi: JWT Session, Crypto OTP Security, React Hooks & TypeScript
+Job Desc: Merancang sistem keamanan otentikasi akun mahasiswa & mitra, mengimplementasikan pengiriman simulasi kode verifikasi OTP rahasia ganda, serta mengamankan alur otorisasi login kawan.
+
+5. Muhammad Marvin Syahid (QA & Data Analyst Engineer)
+Spesialisasi Teknologi: Recharts (D3), JSON Data Store, Jest & TypeScript
+Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS instan otomatis, merancang modul pencatatan statistik grafik (Recharts) di panel admin, serta menjaga keutuhan sinus/sinkronisasi database_store JSON.`;
+
+    setTeamName(defaultTeamName);
+    setRepoLink(defaultRepoLink);
+    setDeployLink(defaultDeployLink);
+    setJobDesc(defaultJobDesc);
+    
+    localStorage.setItem('jasjoking_team_name', defaultTeamName);
+    localStorage.setItem('jasjoking_repo_link', defaultRepoLink);
+    localStorage.setItem('jasjoking_deploy_link', defaultDeployLink);
+    localStorage.setItem('jasjoking_job_desc', defaultJobDesc);
+
+    setSaveTeamSuccess('Identitas berhasil di-reset ke Preset Sistem Kelompok 6!');
+    setTimeout(() => setSaveTeamSuccess(''), 3000);
+  };
   
   // Form fields
   const [username, setUsername] = useState('');
@@ -104,6 +187,37 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
     }
     return () => clearInterval(intervalId);
   }, [emailCooldown, whatsappCooldown]);
+
+  // Silent automatic upgrade of team metadata kawan if old format in localstorage
+  useEffect(() => {
+    const existingJobDesc = localStorage.getItem('jasjoking_job_desc');
+    if (existingJobDesc && !existingJobDesc.includes('PRE-REQUISITES')) {
+      const defaultJobDesc = `PRE-REQUISITES (TEKNOLOGI): React.js, Tailwind CSS, TypeScript, Express.js (Node.js), Drizzle ORM, WebSockets, Lucide Icons, Recharts
+
+1. Rezeki Salsabilah (Ketua Tim / Project Manager & Lead Designer)
+Spesialisasi Teknologi: React.js, Tailwind CSS, Figma & Git
+Job Desc: Mengoordinasikan seluruh alur siklus pengembangan aplikasi, menyusun struktur rancangan visual antarmuka (UI/UX) premium, serta bertanggung jawab penuh atas manajemen tugas tim Kelompok 6 secara terstruktur.
+
+2. Hafiz Al Rasyid (Front-End Developer & UI Engineer)
+Spesialisasi Teknologi: React.js (Vite), Tailwind CSS, Lucide Icons & TypeScript
+Job Desc: Membangun komponen antarmuka interaktif sisi pembeli (Buyer Panel), mengoptimalkan kegunaan desain responsif di browser, serta menyusun fungsionalitas obrolan chat real-time dan status bayar QRIS kawan.
+
+3. Dian Maarifa Sianturi (Back-End Developer & API Integrator)
+Spesialisasi Teknologi: Node.js, Express.ts Server, Drizzle ORM & TypeScript
+Job Desc: Membangun server backend Express, mendesain skema relasional database kawan, serta bertanggung jawab atas integrasi endpoint REST API antara data transaksi pembeli dan dashboard penyedia jasa (Seller Panel).
+
+4. Alif Putrawan (Security Engineer & Authentication Specialist)
+Spesialisasi Teknologi: JWT Session, Crypto OTP Security, React Hooks & TypeScript
+Job Desc: Merancang sistem keamanan otentikasi akun mahasiswa & mitra, mengimplementasikan pengiriman simulasi kode verifikasi OTP rahasia ganda, serta mengamankan alur otorisasi login kawan.
+
+5. Muhammad Marvin Syahid (QA & Data Analyst Engineer)
+Spesialisasi Teknologi: Recharts (D3), JSON Data Store, Jest & TypeScript
+Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS instan otomatis, merancang modul pencatatan statistik grafik (Recharts) di panel admin, serta menjaga keutuhan sinus/sinkronisasi database_store JSON.`;
+      
+      setJobDesc(defaultJobDesc);
+      localStorage.setItem('jasjoking_job_desc', defaultJobDesc);
+    }
+  }, []);
 
   // Auto-sync role when portal changes
   useEffect(() => {
@@ -260,11 +374,11 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
         setEmailOtpSent(false);
         setWhatsappOtpSent(false);
       } else {
-        // Login flow
+        // Login flow with explicit portal identifier to enforce segment boundaries
         const response = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ identifier: email, password }),
+          body: JSON.stringify({ identifier: email, password, portal }),
         });
         const data = await response.json();
 
@@ -299,6 +413,33 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
         throw new Error(data.error || 'Kredensial demo tidak valid.');
       }
       onLoginSuccess(data.user);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetDb = async () => {
+    if (!window.confirm("Apakah Anda yakin ingin me-reset seluruh database basis akun login mahasiswa & mitra ke setelan awal pabrikan kawan?")) {
+      return;
+    }
+    setError('');
+    setSuccess('');
+    setLoading(true);
+    try {
+      const response = await fetch('/api/auth/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Gagal mereset database.');
+      }
+      setSuccess(data.message);
+      setEmail('');
+      setPassword('');
+      setUsername('');
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -384,11 +525,18 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                     Layanan digitalisasi transaksi mandiri & pemesanan jasa freelance kreatif/akademis yang ditawarkan oleh mahasiswa kreatif Kampus Utama Universitas Muhammadiyah Sumatera Utara (UMSU) Jl. Kapten Mukhtar Basri.
                   </p>
                   
-                  <div className="pt-2 flex flex-wrap gap-2.5">
-                    <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded font-mono text-slate-300">#DesainGrafis</span>
-                    <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded font-mono text-slate-300">#EditVideo</span>
-                    <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded font-mono text-slate-300">#FormatSkripsi</span>
-                    <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded font-mono text-slate-300">#BimbinganCoding</span>
+                  <div className="pt-2 flex flex-wrap gap-2.5 items-center">
+                    <button
+                      type="button"
+                      onClick={() => setActiveView('identitas')}
+                      className="text-[10px] bg-emerald-500 hover:bg-emerald-450 text-white font-black px-3 py-1.5 rounded-lg cursor-pointer transition flex items-center gap-1 select-none shadow-sm font-sans"
+                    >
+                      👥 Identitas Tim Pengembang kawan &rarr;
+                    </button>
+                    <span className="text-[10px] bg-white/10 px-2 py-1 rounded font-mono text-slate-350">#DesainGrafis</span>
+                    <span className="text-[10px] bg-white/10 px-2 py-1 rounded font-mono text-slate-355">#EditVideo</span>
+                    <span className="text-[10px] bg-white/10 px-2 py-1 rounded font-mono text-slate-355">#FormatSkripsi</span>
+                    <span className="text-[10px] bg-white/10 px-2 py-1 rounded font-mono text-slate-355">#BimbinganCoding</span>
                   </div>
                 </div>
               </div>
@@ -510,65 +658,90 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                   
                   {/* Grid of Direct and Logical Portal Entry Buttons */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-                    {/* Buyer portal button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveView('auth');
-                        setIsRegister(false);
-                        setPortal('buyer');
-                        setRole('buyer');
-                        setError('');
-                        setSuccess('');
-                      }}
-                      className="p-3.5 bg-emerald-600 hover:bg-emerald-555 text-white rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-sm cursor-pointer border border-emerald-500/30"
-                    >
-                      <GraduationCap className="h-5 w-5 text-emerald-100" />
-                      <div className="text-center">
-                        <span className="block font-black text-xs">🎓 Pengguna Mahasiswa</span>
-                        <span className="block text-[9px] text-emerald-100/80 font-medium">Cari &amp; Pesan Jasa Kuliah</span>
+                    {currentUser ? (
+                      <div className="col-span-1 sm:col-span-3 p-4 bg-emerald-600/20 border border-emerald-500/30 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={currentUser.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
+                            alt={currentUser.username}
+                            className="w-10 h-10 rounded-full border-2 border-emerald-500"
+                          />
+                          <div className="text-left font-sans">
+                            <span className="block text-[10px] text-slate-300 font-extrabold uppercase">Sesi Login Aktif Kawan</span>
+                            <span className="block font-black text-sm text-white">@{currentUser.username} <span className="text-emerald-400">({currentUser.role === 'admin' ? 'Admin' : currentUser.role === 'seller' ? 'Penjual' : 'Mahasiswa'})</span></span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={onEnterWorkspace}
+                          className="py-2.5 px-5 bg-emerald-600 hover:bg-emerald-500 hover:scale-105 active:scale-95 text-white font-extrabold rounded-xl text-xs uppercase cursor-pointer select-none transition-all flex items-center gap-1.5 shadow-md"
+                        >
+                          Lanjutkan ke Dashboard Aplikasi &rarr;
+                        </button>
                       </div>
-                    </button>
+                    ) : (
+                      <>
+                        {/* Buyer portal button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveView('auth');
+                            setIsRegister(false);
+                            setPortal('buyer');
+                            setRole('buyer');
+                            setError('');
+                            setSuccess('');
+                          }}
+                          className="p-3.5 bg-emerald-600 hover:bg-emerald-555 text-white rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-sm cursor-pointer border border-emerald-500/30"
+                        >
+                          <GraduationCap className="h-5 w-5 text-emerald-100" />
+                          <div className="text-center">
+                            <span className="block font-black text-xs">🎓 Pengguna Mahasiswa</span>
+                            <span className="block text-[9px] text-emerald-100/80 font-medium">Cari &amp; Pesan Jasa Kuliah</span>
+                          </div>
+                        </button>
 
-                    {/* Seller portal button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveView('auth');
-                        setIsRegister(false);
-                        setPortal('seller');
-                        setRole('seller');
-                        setError('');
-                        setSuccess('');
-                      }}
-                      className="p-3.5 bg-indigo-650 hover:bg-indigo-600 text-white rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-sm cursor-pointer border border-indigo-500/30"
-                    >
-                      <Store className="h-5 w-5 text-indigo-200" />
-                      <div className="text-center">
-                        <span className="block font-black text-xs">🏪 Admin Jasa/Tempat</span>
-                        <span className="block text-[9px] text-indigo-150/80 font-medium font-sans">Kelola Jasa &amp; Order</span>
-                      </div>
-                    </button>
+                        {/* Seller portal button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveView('auth');
+                            setIsRegister(false);
+                            setPortal('seller');
+                            setRole('seller');
+                            setError('');
+                            setSuccess('');
+                          }}
+                          className="p-3.5 bg-indigo-650 hover:bg-indigo-600 text-white rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-sm cursor-pointer border border-indigo-500/30"
+                        >
+                          <Store className="h-5 w-5 text-indigo-200" />
+                          <div className="text-center">
+                            <span className="block font-black text-xs">🏪 Admin Jasa/Tempat</span>
+                            <span className="block text-[9px] text-indigo-150/80 font-medium font-sans">Kelola Jasa &amp; Order</span>
+                          </div>
+                        </button>
 
-                    {/* Admin portal button */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveView('auth');
-                        setIsRegister(false);
-                        setPortal('admin');
-                        setRole('admin');
-                        setError('');
-                        setSuccess('');
-                      }}
-                      className="p-3.5 bg-slate-800 hover:bg-slate-750 text-slate-100 rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-xs cursor-pointer border border-slate-700"
-                    >
-                      <ShieldCheck className="h-5 w-5 text-amber-400" />
-                      <div className="text-center">
-                        <span className="block font-black text-xs">🛡️ Admin Utama</span>
-                        <span className="block text-[9px] text-slate-400 font-medium font-sans">Sistem Database &amp; Audit</span>
-                      </div>
-                    </button>
+                        {/* Admin portal button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveView('auth');
+                            setIsRegister(false);
+                            setPortal('admin');
+                            setRole('admin');
+                            setError('');
+                            setSuccess('');
+                          }}
+                          className="p-3.5 bg-slate-800 hover:bg-slate-750 text-slate-100 rounded-2xl flex flex-col items-center justify-center text-center gap-1.5 transition duration-150 active:scale-95 shadow-xs cursor-pointer border border-slate-700"
+                        >
+                          <ShieldCheck className="h-5 w-5 text-amber-400" />
+                          <div className="text-center">
+                            <span className="block font-black text-xs">🛡️ Admin Utama</span>
+                            <span className="block text-[9px] text-slate-400 font-medium font-sans">Sistem Database &amp; Audit</span>
+                          </div>
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -588,7 +761,7 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                   <ol className="list-decimal pl-4 text-xs text-slate-600 dark:text-slate-400 space-y-2 font-sans leading-relaxed">
                     <li>Buka menu samping kanan, pilih <b>Pengguna Mahasiswa</b>.</li>
                     <li>Lakukan pendaftaran akun jika belum punya, verifikasi OTP WhatsApp & Email.</li>
-                    <li>Atau login dengan user demo default (misal mahasiswa: <b>aputrawan666@gmail.com</b>, sandi <b>Admin123</b>).</li>
+                    <li>Masuk (Login) menggunakan Email Gmail dan Kata Sandi terdaftar Anda.</li>
                     <li>Telusuri jasa edit video reels, penulisan slide presentasi, bimbingan coding, atau fotografer wisuda.</li>
                     <li>Tentukan staf ahli yang diinginkan, lakukan simulasi bayar lewat QRIS otomatis.</li>
                     <li>Koordinasi file final lewat panel <b>Live Chat</b> yang interaktif.</li>
@@ -839,6 +1012,178 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
             </div>
           )}
 
+          {/* VIEW: IDENTITAS TIM PENGEMBANG (Editable & copyable design sheet kawan) */}
+          {activeView === 'identitas' && (
+            <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm text-left space-y-6 animate-in fade-in slide-in-from-bottom-3 duration-250">
+              
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-850 gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-black text-slate-850 dark:text-slate-100 uppercase tracking-tight">
+                      Identitas Tim Pengembang
+                    </h2>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                      Spesifikasi formal, dokumentasi tautan, dan deskripsi tugas pengerjaan proyek kawan.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsEditingTeam(!isEditingTeam)}
+                  className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer w-max self-end sm:self-auto"
+                >
+                  {isEditingTeam ? '✕ Batal Edit' : '✍️ Edit Identitas'}
+                </button>
+              </div>
+
+              {saveTeamSuccess && (
+                <div className="p-3 bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 dark:text-emerald-400 rounded-xl text-xs font-extrabold flex items-center gap-2">
+                  <span>✅</span>
+                  <span>{saveTeamSuccess}</span>
+                </div>
+              )}
+
+              {isEditingTeam ? (
+                // Form edit mode kawan!
+                <div className="space-y-4 font-sans">
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Nama Tim</label>
+                    <input
+                      type="text"
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-extrabold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Masukkan nama tim kawan..."
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Link Repo GitHub</label>
+                    <input
+                      type="text"
+                      value={repoLink}
+                      onChange={(e) => setRepoLink(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Masukkan URL repositori kawan..."
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Link Deploy Aplikasi</label>
+                    <input
+                      type="text"
+                      value={deployLink}
+                      onChange={(e) => setDeployLink(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      placeholder="Masukkan URL deployment kawan..."
+                    />
+                  </div>
+
+                  <div className="space-y-1.5 text-left">
+                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Daftar Anggota &amp; Job Description</label>
+                    <textarea
+                      rows={6}
+                      value={jobDesc}
+                      onChange={(e) => setJobDesc(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 leading-relaxed font-sans"
+                      placeholder="Tuliskan nama anggota dan job desc masing-masing kawan..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleSaveTeamInfo}
+                      className="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black rounded-xl uppercase tracking-wider transition duration-150 active:scale-98 shadow-sm cursor-pointer"
+                    >
+                      Simpan Identitas Tim kawan
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResetTeamPreset}
+                      className="w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-black rounded-xl uppercase tracking-wider transition duration-150 active:scale-98 shadow-sm cursor-pointer"
+                    >
+                      Reset Ke Preset Sistem
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // Elegant view mode
+                <div className="space-y-5 font-sans animate-in fade-in duration-200">
+                  
+                  {/* Grid fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-emerald-100/10 dark:from-slate-850 dark:to-slate-850 border border-emerald-100/60 dark:border-slate-800">
+                      <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Nama Tim Pengembang</span>
+                      <span className="block text-sm font-black text-slate-850 dark:text-emerald-400 mt-1 uppercase">
+                        {teamName}
+                      </span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-50/50 to-indigo-100/10 dark:from-slate-850 dark:to-slate-850 border border-indigo-100/60 dark:border-slate-800">
+                      <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Repositori Projek</span>
+                      <a 
+                        href={repoLink} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="block text-xs font-extrabold text-indigo-600 dark:text-indigo-400 mt-2 truncate hover:underline"
+                      >
+                        🔗 Lihat Git Repo &rarr;
+                      </a>
+                    </div>
+
+                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50/50 to-purple-100/10 dark:from-slate-850 dark:to-slate-850 border border-purple-100/60 dark:border-slate-800">
+                      <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Link Deploy Aplikasi</span>
+                      <a 
+                        href={deployLink} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        className="block text-xs font-extrabold text-purple-600 dark:text-purple-400 mt-2 truncate hover:underline"
+                      >
+                        🚀 Lihat Live Deploy &rarr;
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Job Desc details */}
+                  <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-850 border border-slate-150 dark:border-slate-800 space-y-3.5 text-left">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-350 flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-2 font-mono">
+                      👥 Alokasi Anggota &amp; Job Description
+                    </h3>
+                    <div className="space-y-3 text-xs leading-relaxed text-slate-600 dark:text-slate-350 whitespace-pre-wrap font-sans font-medium">
+                      {jobDesc}
+                    </div>
+                  </div>
+
+                  {/* Informational helpful note */}
+                  <div className="p-4 bg-emerald-500/5 dark:bg-slate-855 rounded-2xl border border-emerald-500/10 dark:border-slate-800 flex gap-3 text-left">
+                    <span className="text-sm">💡</span>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans font-medium">
+                      <strong>Keterangan Penggunaan:</strong> Anda dapat mengubah data identitas di atas kapan saja dengan mengklik tombol <strong>✍️ Edit Identitas</strong> di sudut kanan atas kawan. Data akan disimpan secara dinamis ke dalam penyimpanan persisen (Local Storage) browser Anda.
+                    </p>
+                  </div>
+
+                </div>
+              )}
+
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 dark:text-slate-500">
+                <span>Diajukan untuk Penilaian Ujian Akademik UMSU &copy; 2026</span>
+                <button
+                  type="button"
+                  onClick={() => setActiveView('beranda')}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-4 py-2 rounded-xl text-xs tracking-wider uppercase transition cursor-pointer hover:scale-102 active:scale-98"
+                >
+                  Kembali ke Beranda
+                </button>
+              </div>
+
+            </div>
+          )}
+
           {/* VIEW: AUTH FORM DISPLAY (Only renders when parent triggers login/daftar) */}
           {activeView === 'auth' && (
             <div className={`w-full ${isRegister ? 'max-w-lg' : 'max-w-md'} mx-auto transition-all duration-300 animate-in fade-in zoom-in-95 duration-200`}>
@@ -855,10 +1200,22 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                         JasJoking Mahasiswa kawan
                       </span>
                       <h1 className="text-xl font-extrabold tracking-tight text-white mb-0.5">
-                        {isRegister ? 'Daftar Akun Baru' : 'Masuk ke Portal'}
+                        {isRegister 
+                          ? 'Daftar Akun Baru' 
+                          : portal === 'buyer' 
+                            ? '🎓 Masuk Portal Mahasiswa' 
+                            : portal === 'seller' 
+                              ? '🏪 Masuk Kendali Mitra Jasa' 
+                              : '🛡️ Masuk Sistem Admin Utama'}
                       </h1>
                       <p className="text-slate-300 text-[10px] max-w-sm font-sans font-medium leading-relaxed">
-                        {isRegister ? 'Isi form di bawah untuk registrasi akun secara instan kawan.' : 'Silakan masukkan kredensial terdaftar UMSU'}
+                        {isRegister 
+                          ? 'Isi form di bawah untuk registrasi akun secara instan kawan.' 
+                          : portal === 'buyer' 
+                            ? 'Sistem login mahasiswa/pembeli UMSU tersertifikasi aman.' 
+                            : portal === 'seller' 
+                              ? 'Dashboard khusus manajemen stand, riwayat pesanan, & pengerjaan kawan.' 
+                              : 'Sistem override kendali penuh, monitoring chat logs, & statistik platform.'}
                       </p>
                     </div>
                     <button
@@ -872,49 +1229,6 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                     </button>
                   </div>
                 </div>
-
-                {/* Sub Portal Switcher (Hidden during registration - default buyer) */}
-                {!isRegister && (
-                  <div className="p-4 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-150 dark:border-slate-800 flex items-center justify-between">
-                    <span className="text-[9px] font-black text-slate-400 dark:text-slate-500 tracking-wider uppercase select-none font-sans">
-                      SEGMEN PORTAL:
-                    </span>
-                    <div className="flex gap-1.5 p-1 bg-slate-200 dark:bg-slate-800 rounded-lg">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPortal('buyer');
-                          setRole('buyer');
-                          setError('');
-                          setSuccess('');
-                        }}
-                        className={`py-1 px-3 rounded-md text-[10px] font-bold transition duration-200 cursor-pointer ${
-                          portal === 'buyer'
-                            ? 'bg-white dark:bg-slate-700 text-emerald-700 dark:text-emerald-400 shadow-xs'
-                            : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'
-                        }`}
-                      >
-                        🎓 Mahasiswa
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPortal('seller');
-                          setRole('seller');
-                          setError('');
-                          setSuccess('');
-                        }}
-                        className={`py-1 px-3 rounded-md text-[10px] font-bold transition duration-200 cursor-pointer ${
-                          portal === 'seller'
-                            ? 'bg-white dark:bg-slate-700 text-indigo-700 dark:text-indigo-400 shadow-xs'
-                            : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'
-                        }`}
-                      >
-                        🏪 Mitra Jasa
-                      </button>
-                    </div>
-                  </div>
-                )}
 
                 {/* Form Wrapper */}
                 <div className="p-6 space-y-4 font-sans">
@@ -1009,7 +1323,7 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                     {/* Email Field - Standard Single Field */}
                     <div>
                       <label className="block text-xs font-semibold text-slate-705 dark:text-slate-300 mb-1">
-                        {isRegister ? 'Alamat Email Gmail' : 'Email / Login Identifier'}
+                        {isRegister ? 'Alamat Email Gmail' : portal === 'buyer' ? '📬 Email Gmail Mahasiswa (@gmail.com)' : portal === 'seller' ? '📬 Email Akun Mitra Jasa/Freelancer' : '🔑 Email Administrator Utama Pemilik'}
                       </label>
                       <div className="relative text-xs">
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 dark:text-slate-500">
@@ -1020,7 +1334,7 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="Contoh: andipradana@gmail.com"
+                          placeholder={portal === 'buyer' ? "Contoh: mhs.andipradana@gmail.com" : portal === 'seller' ? "Contoh: mitra.pratama@gmail.com" : "Contoh: abunawasabunawas172@gmail.com"}
                           className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-800 rounded-lg text-xs bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/45 transition"
                         />
                       </div>
@@ -1057,7 +1371,9 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                     {/* Kata Sandi Password */}
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">Kata Sandi (Min 8 karakter)</label>
+                        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                          {portal === 'buyer' ? '🔑 Password Akun Mahasiswa' : portal === 'seller' ? '🔑 Password Akun Mitra Jasa' : '🔒 Sandi Rahasia Keamanan'} (Min 8 karakter)
+                        </label>
                       </div>
                       <div className="relative text-xs">
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 dark:text-slate-500">
@@ -1158,81 +1474,26 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                         </button>
                       </p>
                     ) : (
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                        Belum punya akun Portal? Khusus Mahasiswa silakan{' '}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsRegister(true);
-                            setPortal('buyer');
-                            setRole('buyer');
-                            setError('');
-                            setSuccess('');
-                          }}
-                          className="font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 cursor-pointer"
-                        >
-                          Daftar Akun Baru
-                        </button>
-                      </p>
+                      portal !== 'admin' && (
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                          Belum punya akun Portal? Khusus Mahasiswa silakan{' '}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsRegister(true);
+                              setPortal('buyer');
+                              setRole('buyer');
+                              setError('');
+                              setSuccess('');
+                            }}
+                            className="font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 cursor-pointer"
+                          >
+                            Daftar Akun Baru
+                          </button>
+                        </p>
+                      )
                     )}
                   </div>
-
-                  {/* Simple Defaults Preview Box for Fast Reviewing */}
-                  {!isRegister && (
-                    <div className="mt-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 text-[10px] text-slate-650 dark:text-slate-400 leading-normal border border-dashed border-slate-200 dark:border-slate-800 space-y-2.5">
-                      <span className="font-extrabold uppercase text-slate-400 dark:text-slate-500 block text-[9px] tracking-wider text-center">
-                        ⚡ AKUN DEMO INSTAN (KLIK UNTUK MASUK TANPA KETIK)
-                      </span>
-                      
-                      <div className="grid grid-cols-1 gap-2">
-                        {/* Instant buyer */}
-                        <button
-                          type="button"
-                          onClick={() => handleInstantLogin('aputrawan666@gmail.com', 'buyer')}
-                          className="w-full py-1.5 px-3 bg-white hover:bg-emerald-50 dark:bg-slate-900 dark:hover:bg-emerald-950/20 border border-slate-200 dark:border-slate-800 hover:border-emerald-300 rounded-xl transition text-left cursor-pointer flex items-center justify-between text-[10px]"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold block text-slate-850 dark:text-slate-200 text-left">
-                              🎓 Pengguna Mahasiswa
-                            </span>
-                          </div>
-                          <span className="font-mono text-emerald-600 dark:text-emerald-400 font-extrabold shrink-0">aputrawan &rarr;</span>
-                        </button>
-
-                        {/* Instant seller */}
-                        <button
-                          type="button"
-                          onClick={() => handleInstantLogin('hafizalrasyid8@gmail.com', 'seller')}
-                          className="w-full py-1.5 px-3 bg-white hover:bg-indigo-50 dark:bg-slate-900 dark:hover:bg-indigo-950/20 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 rounded-xl transition text-left cursor-pointer flex items-center justify-between text-[10px]"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold block text-slate-850 dark:text-slate-200 text-left">
-                              🏪 Admin Jasa / Tempat (Hafiz)
-                            </span>
-                          </div>
-                          <span className="font-mono text-indigo-600 dark:text-indigo-400 font-extrabold shrink-0 font-sans">hafizalrasyid &rarr;</span>
-                        </button>
-
-                        {/* Instant admin */}
-                        <button
-                          type="button"
-                          onClick={() => handleInstantLogin('abunawasabunawas172@gmail.com', 'admin')}
-                          className="w-full py-1.5 px-3 bg-white hover:bg-amber-50 dark:bg-slate-900 dark:hover:bg-amber-950/20 border border-slate-200 dark:border-slate-800 hover:border-amber-300 rounded-xl transition text-left cursor-pointer flex items-center justify-between text-[10px]"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-semibold block text-slate-850 dark:text-slate-200 text-left">
-                              🛡️ Admin Utama (Abunawas)
-                            </span>
-                          </div>
-                          <span className="font-mono text-amber-600 dark:text-amber-500 font-extrabold shrink-0">abunawas &rarr;</span>
-                        </button>
-                      </div>
-
-                      <p className="text-[9px] text-slate-400 dark:text-slate-505 font-medium text-center mt-1">
-                        Sandi demo default untuk semua akun di atas adalah <strong className="font-mono">Admin123</strong>
-                      </p>
-                    </div>
-                  )}
 
                 </div>
 
@@ -1354,6 +1615,23 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                     <span>📄 Proposal Dokumen Projek</span>
                   </button>
 
+                  {/* Identitas Tim Pengembang Tab */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveView('identitas');
+                      setMenuOpen(false);
+                    }}
+                    className={`w-full p-2.5 rounded-xl border text-left transition text-xs font-bold flex items-center gap-2.5 cursor-pointer ${
+                      activeView === 'identitas'
+                        ? 'border-emerald-500/50 bg-emerald-500/10 dark:bg-emerald-500/5 text-emerald-800 dark:text-emerald-400'
+                        : 'border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    <Users className="h-4 w-4 text-emerald-500" />
+                    <span>👥 Identitas Tim Pengembang</span>
+                  </button>
+
                   {/* Warning Security page Tab */}
                   <button
                     type="button"
@@ -1378,90 +1656,124 @@ export function AuthScreen({ onLoginSuccess, theme, onToggleTheme }: AuthScreenP
                 <span className="block text-[9px] font-black text-slate-500 dark:text-slate-400 tracking-wider uppercase select-none">
                   🔑 MASUK / DAFTAR AKUN PORTAL
                 </span>
-                <div className="space-y-2">
-                  
-                  {/* Student portal direct gate */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveView('auth');
-                      setIsRegister(false);
-                      setPortal('buyer');
-                      setRole('buyer');
-                      setMenuOpen(false);
-                      setError('');
-                      setSuccess('');
-                    }}
-                    className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
-                      activeView === 'auth' && portal === 'buyer' && !isRegister
-                        ? 'border-emerald-500/60 bg-emerald-500/10 dark:bg-emerald-500/5 text-emerald-900 dark:text-emerald-400 font-extrabold shadow-xs'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <GraduationCap className="h-4 w-4 text-emerald-500" />
-                      <div className="text-xs text-left">
-                        <span className="block font-black text-slate-800 dark:text-slate-100">🎓 Pengguna Mahasiswa (Pencari Jasa)</span>
-                        <span className="text-[9.5px] text-slate-500 dark:text-slate-400 block font-normal leading-normal">Pesan jasa poster, PPT, coding, CV kawan</span>
-                      </div>
-                    </div>
-                  </button>
+                <div className="space-y-2 font-sans">
+                  {currentUser ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        if (onEnterWorkspace) onEnterWorkspace();
+                      }}
+                      className="w-full p-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer transition active:scale-95 shadow-sm"
+                    >
+                      🚀 Lanjutkan ke Dashboard kawan
+                    </button>
+                  ) : (
+                    <>
+                      {/* Student portal direct gate */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveView('auth');
+                          setIsRegister(false);
+                          setPortal('buyer');
+                          setRole('buyer');
+                          setMenuOpen(false);
+                          setError('');
+                          setSuccess('');
+                        }}
+                        className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
+                          activeView === 'auth' && portal === 'buyer' && !isRegister
+                            ? 'border-emerald-500/60 bg-emerald-500/10 dark:bg-emerald-500/5 text-emerald-950 dark:text-emerald-400 font-extrabold shadow-xs'
+                            : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <GraduationCap className="h-4 w-4 text-emerald-500" />
+                          <div className="text-xs text-left">
+                            <span className="block font-black text-slate-805 dark:text-slate-100">🎓 Pengguna Mahasiswa (Pencari Jasa)</span>
+                            <span className="text-[9.5px] text-slate-550 dark:text-slate-400 block font-normal leading-normal">Pesan jasa poster, PPT, coding, CV kawan</span>
+                          </div>
+                        </div>
+                      </button>
 
-                  {/* Mitra Freelancer Portal gate */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveView('auth');
-                      setIsRegister(false);
-                      setPortal('seller');
-                      setRole('seller');
-                      setMenuOpen(false);
-                      setError('');
-                      setSuccess('');
-                    }}
-                    className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
-                      activeView === 'auth' && portal === 'seller' && !isRegister
-                        ? 'border-indigo-500/60 bg-indigo-500/10 dark:bg-indigo-500/5 text-indigo-900 dark:text-indigo-400 font-extrabold shadow-xs'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <Store className="h-4 w-4 text-indigo-500" />
-                      <div className="text-xs text-left">
-                        <span className="block font-black text-slate-800 dark:text-slate-100">🏪 Admin Jasa / Tempat (Freelancer)</span>
-                        <span className="text-[9.5px] text-slate-500 dark:text-slate-400 block font-normal leading-normal">Buka jasa editing, copywriting &amp; terima order</span>
-                      </div>
-                    </div>
-                  </button>
+                      {/* Mitra Freelancer Portal gate */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveView('auth');
+                          setIsRegister(false);
+                          setPortal('seller');
+                          setRole('seller');
+                          setMenuOpen(false);
+                          setError('');
+                          setSuccess('');
+                        }}
+                        className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
+                          activeView === 'auth' && portal === 'seller' && !isRegister
+                            ? 'border-indigo-500/60 bg-indigo-500/10 dark:bg-indigo-500/5 text-indigo-900 dark:text-indigo-400 font-extrabold shadow-xs'
+                            : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Store className="h-4 w-4 text-indigo-500" />
+                          <div className="text-xs text-left">
+                            <span className="block font-black text-slate-808 dark:text-slate-100">🏪 Admin Jasa / Tempat (Freelancer)</span>
+                            <span className="text-[9.5px] text-slate-550 dark:text-slate-400 block font-normal leading-normal">Buka jasa editing, copywriting &amp; terima order</span>
+                          </div>
+                        </div>
+                      </button>
 
-                  {/* Owner Master Portal gate */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setActiveView('auth');
-                      setIsRegister(false);
-                      setPortal('admin');
-                      setRole('admin');
-                      setMenuOpen(false);
-                      setError('');
-                      setSuccess('');
-                    }}
-                    className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
-                      activeView === 'auth' && portal === 'admin'
-                        ? 'border-amber-500/60 bg-amber-500/10 dark:bg-amber-950/10 text-amber-900 dark:text-amber-400 font-extrabold shadow-xs'
-                        : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <ShieldCheck className="h-4 w-4 text-amber-500" />
-                      <div className="text-xs text-left">
-                        <span className="block font-black text-slate-805 dark:text-slate-100">🛡️ Admin Utama Sistem (Owner)</span>
-                        <span className="text-[9.5px] text-slate-550 dark:text-slate-400 block font-normal leading-normal">Override pengerjaan, sadap chat monitoring</span>
-                      </div>
-                    </div>
-                  </button>
-
+                      {/* Owner Master Portal gate */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveView('auth');
+                          setIsRegister(false);
+                          setPortal('admin');
+                          setRole('admin');
+                          setMenuOpen(false);
+                          setError('');
+                          setSuccess('');
+                        }}
+                        className={`w-full p-3 rounded-xl border text-left transition flex items-center justify-between cursor-pointer ${
+                          activeView === 'auth' && portal === 'admin'
+                            ? 'border-amber-500/60 bg-amber-500/10 dark:bg-amber-955/10 text-amber-900 dark:text-amber-400 font-extrabold shadow-xs'
+                            : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-705 dark:text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <ShieldCheck className="h-4 w-4 text-amber-500" />
+                          <div className="text-xs text-left">
+                            <span className="block font-black text-slate-805 dark:text-slate-100">🛡️ Admin Utama Sistem (Owner)</span>
+                            <span className="text-[9.5px] text-slate-550 dark:text-slate-400 block font-normal leading-normal">Override pengerjaan, sadap chat monitoring</span>
+                          </div>
+                        </div>
+                      </button>
+                    </>
+                  )}
                 </div>
+              </div>
+
+              {/* Reset Database Diagnostic Tools kawan */}
+              <div className="p-3.5 bg-rose-50/50 dark:bg-rose-950/10 rounded-2xl border border-rose-150 dark:border-rose-900/30 text-left space-y-2">
+                <span className="block text-[9.5px] font-black text-rose-600 dark:text-rose-400 tracking-wider uppercase font-sans">
+                  ⚙️ ADMINISTRASI TESTING &amp; DATABASE
+                </span>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
+                  Gunakan tombol di bawah untuk membersihkan pendaftaran baru dan me-reset status login mahasiswa &amp; pengguna mitra kawan.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    handleResetDb();
+                  }}
+                  className="w-full py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer select-none active:scale-98 shadow-sm"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  <span>Reset Data Login Mahasiswa &amp; Mitra</span>
+                </button>
               </div>
 
             </div>

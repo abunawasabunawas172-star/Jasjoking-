@@ -2,6 +2,23 @@ import React, { useState } from 'react';
 import { User } from '../types';
 import { X, Shield, UserCircle, Store, Key, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 
+const PRESET_AVATARS = [
+  { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', label: '👩‍🎓 Rina' },
+  { url: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150', label: '🧑‍🎓 Budi' },
+  { url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150', label: '👩‍🎓 Siti' },
+  { url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150', label: '🧑‍🎓 Adi' },
+  { url: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150', label: '👩‍🎓 Ani' },
+  { url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150', label: '🧑‍🎓 Feri' }
+];
+
+const formatWhatsappNumber = (num: string) => {
+  let cleaned = num.replace(/\D/g, ''); // keep only numbers
+  if (cleaned.startsWith('0')) {
+    cleaned = '62' + cleaned.substring(1);
+  }
+  return cleaned;
+};
+
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -12,6 +29,7 @@ interface SettingsModalProps {
 export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalProps) {
   const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'seller'>('profile');
   const [username, setUsername] = useState(user.username);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl || '');
   const [address, setAddress] = useState(user.address || '');
   const [whatsappNumber, setWhatsappNumber] = useState(user.whatsappNumber || '');
   
@@ -57,6 +75,7 @@ export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalPr
       const payload: any = {
         userId: user.id,
         username,
+        avatarUrl,
         address,
       };
 
@@ -204,6 +223,54 @@ export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalPr
             {/* TAB: PROFILE */}
             {activeTab === 'profile' && (
               <div className="space-y-4 text-xs">
+                {/* Avatar Preview & URL Input */}
+                <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
+                      alt="Pratinjau Foto Profil"
+                      className="w-14 h-14 rounded-full object-cover ring-2 ring-emerald-500/50 shrink-0"
+                    />
+                    <div className="flex-1 space-y-1">
+                      <label className="block text-slate-500 dark:text-slate-450 font-bold mb-0.5">URL Foto Profil / Avatar</label>
+                      <input
+                        type="url"
+                        value={avatarUrl}
+                        onChange={(e) => setAvatarUrl(e.target.value)}
+                        placeholder="Masukkan URL foto dari internet (misal: Unsplash)..."
+                        className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:outline-none focus:border-emerald-500 dark:text-slate-100 placeholder:text-[10px]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Preset Avatar Selection gallery kawan */}
+                  <div className="border-t border-slate-200/65 dark:border-slate-700/50 pt-2.5">
+                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-bold mb-1.5 uppercase tracking-wider">💡 Pilih Karakter Avatar Mahasiswa kawan:</span>
+                    <div className="grid grid-cols-6 gap-2">
+                      {PRESET_AVATARS.map((av, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => setAvatarUrl(av.url)}
+                          className={`flex flex-col items-center gap-1 p-1 rounded-lg border transition hover:bg-white dark:hover:bg-slate-800 cursor-pointer ${
+                            avatarUrl === av.url 
+                              ? 'border-emerald-500 bg-emerald-50/10 ring-1 ring-emerald-500/30' 
+                              : 'border-transparent'
+                          }`}
+                          title={`Gunakan Preset ${av.label}`}
+                        >
+                          <img
+                            src={av.url}
+                            alt={av.label}
+                            className="w-9 h-9 rounded-full object-cover"
+                          />
+                          <span className="text-[8px] text-slate-500 dark:text-slate-400 truncate w-full text-center">{av.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-slate-500 dark:text-slate-450 font-semibold tracking-wide mb-1">Nama Mahasiswa / Username</label>
                   <input
@@ -236,6 +303,15 @@ export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalPr
                     className="w-full p-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-lg focus:outline-none focus:border-emerald-500 dark:text-slate-100 font-mono"
                     placeholder="Contoh: 08123456789"
                   />
+                  {whatsappNumber.startsWith('0') && (
+                    <button
+                      type="button"
+                      onClick={() => setWhatsappNumber(formatWhatsappNumber(whatsappNumber))}
+                      className="mt-1 text-[10px] text-amber-600 dark:text-amber-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>💡 Format Nomor WA diawali 08, klik untuk ubah otomatis ke &quot;{formatWhatsappNumber(whatsappNumber)}&quot; kawan</span>
+                    </button>
+                  )}
                 </div>
 
                 <div>

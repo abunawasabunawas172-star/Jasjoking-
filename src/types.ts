@@ -35,6 +35,8 @@ export interface Product {
   whatsappContact?: string;
   sellerRating?: number;
   sellerReviewCount?: number;
+  productRating?: number;
+  productReviewCount?: number;
   sellerType?: 'mahasiswa' | 'mitra'; // Categorize product vendor
 }
 
@@ -71,6 +73,7 @@ export interface Order {
   selectedStaff?: string; // e.g. "Riko (UI Specialist)"
   scheduledTime?: string; // e.g. "Kamis, 14:00 - 16:00"
   seatingRequest?: string; // e.g. "Meja 12"
+  customNotes?: string; // e.g. "Instruksi khusus pengerjaan desain/jasa"
   chatHistory: Message[];
   rating?: number;
   review?: string;
@@ -83,6 +86,13 @@ export interface Order {
   sellerQrisCode?: string;
   payoutToSeller?: number;
   payoutToPlatform?: number;
+  paymentSchema?: 'full' | 'dp';
+  dpPaidAmount?: number;
+  remainingAmount?: number;
+  repaymentStatus?: 'none' | 'unpaid' | 'paid';
+  titleSelectionMethod?: 'self' | 'seller_suggest';
+  userSuggestedTitle?: string;
+  qrisPaymentProvider?: string;
 }
 
 export interface DiscordLog {

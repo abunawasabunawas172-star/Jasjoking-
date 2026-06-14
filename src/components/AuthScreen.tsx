@@ -1031,13 +1031,19 @@ Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS ins
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setIsEditingTeam(!isEditingTeam)}
-                  className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer w-max self-end sm:self-auto"
-                >
-                  {isEditingTeam ? '✕ Batal Edit' : '✍️ Edit Identitas'}
-                </button>
+                {currentUser?.role === 'admin' ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingTeam(!isEditingTeam)}
+                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition cursor-pointer w-max self-end sm:self-auto shrink-0"
+                  >
+                    {isEditingTeam ? '✕ Batal Edit' : '✍️ Edit Identitas'}
+                  </button>
+                ) : (
+                  <div className="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 rounded-xl text-[10px] font-black flex items-center gap-1.5 border border-rose-100 dark:border-rose-900/40 uppercase tracking-wide shrink-0">
+                    <span>🔒 Terkunci (Khusus Admin Kel.6)</span>
+                  </div>
+                )}
               </div>
 
               {saveTeamSuccess && (
@@ -1047,7 +1053,7 @@ Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS ins
                 </div>
               )}
 
-              {isEditingTeam ? (
+              {isEditingTeam && currentUser?.role === 'admin' ? (
                 // Form edit mode kawan!
                 <div className="space-y-4 font-sans">
                   <div className="space-y-1.5 text-left">
@@ -1062,31 +1068,9 @@ Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS ins
                   </div>
 
                   <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Link Repo GitHub</label>
-                    <input
-                      type="text"
-                      value={repoLink}
-                      onChange={(e) => setRepoLink(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="Masukkan URL repositori kawan..."
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 text-left">
-                    <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Link Deploy Aplikasi</label>
-                    <input
-                      type="text"
-                      value={deployLink}
-                      onChange={(e) => setDeployLink(e.target.value)}
-                      className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      placeholder="Masukkan URL deployment kawan..."
-                    />
-                  </div>
-
-                  <div className="space-y-1.5 text-left">
                     <label className="block text-[10px] font-black uppercase tracking-wider text-slate-400">Daftar Anggota &amp; Job Description</label>
                     <textarea
-                      rows={6}
+                      rows={8}
                       value={jobDesc}
                       onChange={(e) => setJobDesc(e.target.value)}
                       className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-850 dark:text-slate-100 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 leading-relaxed font-sans"
@@ -1116,36 +1100,12 @@ Job Desc: Melakukan pengujian fungsionalitas sistem simulasi pembayaran QRIS ins
                 <div className="space-y-5 font-sans animate-in fade-in duration-200">
                   
                   {/* Grid fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-emerald-100/10 dark:from-slate-850 dark:to-slate-850 border border-emerald-100/60 dark:border-slate-800">
                       <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Nama Tim Pengembang</span>
                       <span className="block text-sm font-black text-slate-850 dark:text-emerald-400 mt-1 uppercase">
                         {teamName}
                       </span>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-indigo-50/50 to-indigo-100/10 dark:from-slate-850 dark:to-slate-850 border border-indigo-100/60 dark:border-slate-800">
-                      <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Repositori Projek</span>
-                      <a 
-                        href={repoLink} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        className="block text-xs font-extrabold text-indigo-600 dark:text-indigo-400 mt-2 truncate hover:underline"
-                      >
-                        🔗 Lihat Git Repo &rarr;
-                      </a>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50/50 to-purple-100/10 dark:from-slate-850 dark:to-slate-850 border border-purple-100/60 dark:border-slate-800">
-                      <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Link Deploy Aplikasi</span>
-                      <a 
-                        href={deployLink} 
-                        target="_blank" 
-                        rel="noreferrer" 
-                        className="block text-xs font-extrabold text-purple-600 dark:text-purple-400 mt-2 truncate hover:underline"
-                      >
-                        🚀 Lihat Live Deploy &rarr;
-                      </a>
                     </div>
                   </div>
 

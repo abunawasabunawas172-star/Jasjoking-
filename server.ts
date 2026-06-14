@@ -6,6 +6,15 @@ import { GoogleGenAI } from "@google/genai";
 import nodemailer from "nodemailer";
 import { User, Product, Order, DiscordLog, AppNotification, Message, CategoryType, OrderStatus } from "./src/types.js";
 
+// Safe Process Listeners to log and handle uncaught rejections/exceptions gracefully
+process.on("unhandledRejection", (reason, promise) => {
+  console.warn("⚠️ UNHANDLED REJECTION DETECTED:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("🔥 UNCAUGHT EXCEPTION DETECTED:", error);
+});
+
 const app = express();
 const PORT = 3000;
 

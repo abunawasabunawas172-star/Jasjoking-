@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User } from '../types';
-import { X, Shield, UserCircle, Store, Key, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { X, Shield, UserCircle, Store, Key, Eye, EyeOff, CheckCircle2, Plus, Upload } from 'lucide-react';
 
 const PRESET_AVATARS = [
   { url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150', label: '👩‍🎓 Rina' },
@@ -48,6 +48,23 @@ export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalPr
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        setError('Ukuran file foto maksimal yang diizinkan adalah 2MB kawan.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setAvatarUrl(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -223,50 +240,42 @@ export function SettingsModal({ isOpen, onClose, user, onSave }: SettingsModalPr
             {/* TAB: PROFILE */}
             {activeTab === 'profile' && (
               <div className="space-y-4 text-xs">
-                {/* Avatar Preview & URL Input */}
-                <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
-                      alt="Pratinjau Foto Profil"
-                      className="w-14 h-14 rounded-full object-cover ring-2 ring-emerald-500/50 shrink-0"
-                    />
-                    <div className="flex-1 space-y-1">
-                      <label className="block text-slate-500 dark:text-slate-450 font-bold mb-0.5">URL Foto Profil / Avatar</label>
-                      <input
-                        type="url"
-                        value={avatarUrl}
-                        onChange={(e) => setAvatarUrl(e.target.value)}
-                        placeholder="Masukkan URL foto dari internet (misal: Unsplash)..."
-                        className="w-full p-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:outline-none focus:border-emerald-500 dark:text-slate-100 placeholder:text-[10px]"
+                {/* Avatar File Upload Section kawan */}
+                <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-205 dark:border-slate-800 space-y-3.5">
+                  <div className="flex flex-col items-center justify-center text-center space-y-3">
+                    <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">Foto Profil Pengguna</span>
+                    
+                    <div className="relative group cursor-pointer" onClick={() => document.getElementById('avatar-file-input')?.click()}>
+                      <img
+                        src={avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                        alt="Foto Profil"
+                        className="w-20 h-20 rounded-full object-cover ring-4 ring-emerald-580/20 group-hover:ring-emerald-500/50 transition duration-150"
                       />
+                      {/* Plus button overlaid on the avatar */}
+                      <div className="absolute bottom-0 right-0 bg-emerald-600 border-2 border-white dark:border-slate-900 text-white rounded-full p-1.5 shadow-md flex items-center justify-center group-hover:bg-emerald-500 transition duration-150">
+                        <Plus className="h-3.5 w-3.5" />
+                      </div>
+                      
+                      <div className="absolute inset-0 bg-black/20 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-150">
+                        <span className="text-[9px] text-white font-extrabold uppercase tracking-widest">Ubah</span>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Preset Avatar Selection gallery kawan */}
-                  <div className="border-t border-slate-200/65 dark:border-slate-700/50 pt-2.5">
-                    <span className="block text-[10px] text-slate-400 dark:text-slate-500 font-bold mb-1.5 uppercase tracking-wider">💡 Pilih Karakter Avatar Mahasiswa kawan:</span>
-                    <div className="grid grid-cols-6 gap-2">
-                      {PRESET_AVATARS.map((av, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => setAvatarUrl(av.url)}
-                          className={`flex flex-col items-center gap-1 p-1 rounded-lg border transition hover:bg-white dark:hover:bg-slate-800 cursor-pointer ${
-                            avatarUrl === av.url 
-                              ? 'border-emerald-500 bg-emerald-50/10 ring-1 ring-emerald-500/30' 
-                              : 'border-transparent'
-                          }`}
-                          title={`Gunakan Preset ${av.label}`}
-                        >
-                          <img
-                            src={av.url}
-                            alt={av.label}
-                            className="w-9 h-9 rounded-full object-cover"
-                          />
-                          <span className="text-[8px] text-slate-500 dark:text-slate-400 truncate w-full text-center">{av.label}</span>
-                        </button>
-                      ))}
+                    <input
+                      id="avatar-file-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+
+                    <div className="space-y-1">
+                      <p className="text-[11px] font-black text-slate-700 dark:text-slate-200">
+                        Klik tombol + atau lingkaran foto di atas untuk memilih foto
+                      </p>
+                      <p className="text-[9px] text-slate-400 dark:text-slate-500 leading-normal max-w-[280px]">
+                        Mendukung file gambar perangkat pembeli, mitra jasa, &amp; pengemudi kawan. Maksimal ukuran file 2MB.
+                      </p>
                     </div>
                   </div>
                 </div>

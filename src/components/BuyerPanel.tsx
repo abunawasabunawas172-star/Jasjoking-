@@ -96,6 +96,7 @@ export function BuyerPanel({ user, onLogout, products, refreshProducts, onOpenPr
 
   // Selected active order for Chat Context or Detail View
   const [viewingOrder, setViewingOrder] = useState<Order | null>(null);
+  const [confirmCancelId, setConfirmCancelId] = useState<string | null>(null);
   const [viewingOrderSubTab, setViewingOrderSubTab] = useState<'payment' | 'chat'>('payment');
   const [chatMessage, setChatMessage] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -300,6 +301,29 @@ export function BuyerPanel({ user, onLogout, products, refreshProducts, onOpenPr
       setVerificationError(err.message || "Gagal terhubung ke modul deteksi AI.");
     } finally {
       setVerificationLoading(false);
+    }
+  };
+
+  // Cancel active order kawan
+  const handleCancelOrder = async (orderId: string) => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'cancelled' })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          fetchOrders();
+          if (viewingOrder && viewingOrder.id === orderId) {
+            setViewingOrder({ ...viewingOrder, status: 'cancelled' });
+          }
+          setConfirmCancelId(null);
+        }
+      }
+    } catch (err) {
+      console.error("Gagal membatalkan pesanan kawan:", err);
     }
   };
 
@@ -1219,6 +1243,45 @@ export function BuyerPanel({ user, onLogout, products, refreshProducts, onOpenPr
                       </>
                     )}
                   </button>
+                </div>
+              )}
+
+              {/* ⭐ SEKSI PEMBATALAN TRANSAKSI (CANCEL ORDER ACTION) kawan */}
+              {viewingOrder.status !== 'cancelled' && viewingOrder.status !== 'completed' && (
+                <div className="p-4 bg-white rounded-2xl border border-slate-205 shadow-xs text-center space-y-2 mt-4 shrink-0">
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Bantuan &amp; Pembatalan</p>
+                  
+                  {confirmCancelId === viewingOrder.id ? (
+                    <div className="space-y-2 animate-in fade-in duration-200 text-left">
+                      <p className="text-[11px] text-rose-600 font-extrabold leading-normal select-none">
+                        ⚠️ Kawan, apakah Anda benar-benar yakin ingin membatalkan pesanan ini?
+                      </p>
+                      <div className="flex gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setConfirmCancelId(null)}
+                          className="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-[11px] font-bold transition cursor-pointer text-center"
+                        >
+                          Batal, Balik
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleCancelOrder(viewingOrder.id)}
+                          className="flex-1 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[11px] font-extrabold transition cursor-pointer text-center"
+                        >
+                          Ya, Batalkan kawan!
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmCancelId(viewingOrder.id)}
+                      className="w-full py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-800 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 border border-rose-200 cursor-pointer"
+                    >
+                      <span>❌ Ajukan Pembatalan Pesanan kawan</span>
+                    </button>
+                  )}
                 </div>
               )}
 
